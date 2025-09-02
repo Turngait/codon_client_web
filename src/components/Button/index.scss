@@ -1,0 +1,30 @@
+@import '../../styles/colors.scss';
+
+.button {
+  border: none;
+  border-radius: 3px;
+  background-color: $blue;
+  color: $white;
+  padding: 0.6rem 0.8rem;
+  box-sizing: border-box;
+  font-size: 2rem;
+  cursor: pointer;
+  font-weight: 900;
+  transition: all 150ms linear;
+
+  &:hover {
+    background: darken($dark-blue, 1.5%);
+    box-shadow: 1px 1px 2px rgba(#fff, .2);
+    // color: lighten($green, 18%); 
+    text-shadow: -1px -1px 0 darken($dark-blue, 9.5%);
+    transition: all 250ms linear;
+  }
+}
+
+.largeBtn {
+  width: 100%;
+}
+
+.mediumBtn {
+  width: 60%;
+}

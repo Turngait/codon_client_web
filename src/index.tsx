@@ -1,15 +1,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import { Provider } from 'react-redux'
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter, Route, Routes } from "react-router";
+
+import './index.scss';
+import App from './App';
+import { store } from './store/store'
+import Dashboard from './pages/dashboard';
+import AnalysisPage from './pages/analysis';
+import Profile from './pages/profile';
+import './i18n';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <Provider store={store}>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/analysis" element={<AnalysisPage />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </Provider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

@@ -1,0 +1,78 @@
+@import "../../styles/colors.scss";
+
+.main {
+  display: grid;
+  grid-template-columns: 70% 30%;
+  grid-template-rows: 100%;
+  height: 100%;
+
+  &__infoBox {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    background-image: url('../../assets/img/main_bcg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 16rem 6rem 6rem 6rem;
+    font-size: 1.8rem;
+    gap: 4rem;
+
+    &__mainTitle {
+      font-size: 7rem;
+      font-weight: 100;
+      padding: 0;
+      margin: 0;
+    }
+
+    &__underTitle {
+      text-align: right;
+    }
+
+    &__text {
+      width: 60%;
+    }
+  }
+
+  &__controlBox {
+    background-color: #fff;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    &__headerBox {
+      display: flex;
+      flex-direction: row;
+      gap: 2rem;
+      justify-content: end;
+      font-size: 1.4rem;
+      text-decoration: underline;
+    }
+
+    &__form {
+      font-size: 1.4rem;
+      text-align: center;
+      padding-top: 20rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      align-self: center;
+      width: 70%;
+
+      &__title {
+        font-size: 3rem;
+        font-weight: 400;
+      }
+
+      &__signUpBtn {
+        font-size: 1.6rem;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+    &__footer {
+      text-align: right;
+    }
+  }
+}

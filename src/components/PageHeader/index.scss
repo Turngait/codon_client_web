@@ -1,0 +1,9 @@
+@import "../../styles/colors.scss";
+
+.pageHeader {
+  &__header {
+    font-size: 3.6rem;
+    font-weight: 400;
+    color: $black;
+  }
+}

@@ -1,0 +1,11 @@
+@import "../../styles/colors.scss";
+
+.analysis {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+
+  &__infoBox {
+    padding: 5rem 6rem;
+  }
+}

@@ -1,0 +1,10 @@
+.textInput {
+  padding: 0.8rem 1.5rem;
+  border: 1px solid #6d6d6da1;
+  border-radius: 5px;
+  font-size: 1.4rem;
+
+  &:focus {
+    outline: none;
+  }
+}
