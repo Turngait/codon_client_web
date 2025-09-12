@@ -23,16 +23,19 @@ function Dashboard() {
       navigate('/');
     } else {
       const fetchData = async (token: string) => {
-        const data = await getAllDataService(token);
-        if (data.status && data.status === 200) {
-          if (data.data.analysis) {
-            dispatch(editAnalysis(data.data.analysis.analysis));
-            dispatch(updateGroups(data.data.analysis.groups));
-            setAnalysisData(data.data.analysis.analysis);
+        try {
+          const data = await getAllDataService(token);
+          if (data.status && data.status === 200) {
+            if (data.data.analysis) {
+              dispatch(editAnalysis(data.data.analysis.analysis));
+              dispatch(updateGroups(data.data.analysis.groups));
+              setAnalysisData(data.data.analysis.analysis);
+            }
           }
+        } catch {
+          return;
         }
-      }
-
+        }
       fetchData(token);
     }
   }, [dispatch, navigate]);
