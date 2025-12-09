@@ -34,5 +34,34 @@ export async function addAnalysisService(token: string, title: string, clinic: s
       }
     });
   
-    return {data: res.data , status: res.status, msg: res.msg || null};
+    return {data: res.data || null, status: res.status, msg: res.msg || null};
 }
+
+export async function deleteAnalysisOrValue(token: string, id: string): Promise<{status: number, data: any, msg?: string | null}> {
+  const res = await fetch(API_URL + '/analysis', {
+      method: "DELETE",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json;charset=utf-8",
+        "token": API_KEY,
+        "user_token": token
+      },
+      mode: "cors",
+      body: JSON.stringify({
+        id
+      }),
+    })
+    .then(res => {
+      return res.json()
+    })
+    .then(data => {
+      if (data && data.status) {
+        return data;
+      }
+      else {
+        return {data: data.data, status: data, msg: null}
+      }
+    });
+  
+    return {data: res.data || null, status: res.status, msg: res.msg || null};
+} 

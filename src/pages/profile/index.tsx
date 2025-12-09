@@ -18,7 +18,7 @@ function Profile() {
   return (
     <div className="profile">
       <title>{t("profile.title")}</title>
-      <LeftMenu />
+      <LeftMenu title='Profile' />
       <div className='profile__infoBox'>
         <PageHeader title={t("profile.title")} />
         <div className='profile__infoBox__dataBox'>

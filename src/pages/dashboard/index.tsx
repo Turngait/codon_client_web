@@ -44,7 +44,7 @@ function Dashboard() {
   return (
     <div className="dashboard">
       <title>Dashboard</title>
-      <LeftMenu />
+      <LeftMenu title={"Dashboard"} />
       <div className='dashboard__infoBox'>
         <PageHeader title='Dashboard' />
 
