@@ -1,7 +1,6 @@
 import { API_KEY, API_URL } from "../../../config/api";
 
-export async function addAnalysisService(token: string, title: string, clinic: string, equipment: string, groupId: string, description: string, doctors: string, values: any,): Promise<{status: number, data: any, msg?: string | null}> {
-  const now = new Date();
+export async function addAnalysisService(token: string, title: string, equipment: string, groupId: number, clinicId:number, description: string, doctors: string, values: any, date: string): Promise<{status: number, data: any, msg?: string | null}> {
   const res = await fetch(API_URL + '/analysis', {
       method: "POST",
       headers: {
@@ -12,12 +11,12 @@ export async function addAnalysisService(token: string, title: string, clinic: s
       },
       mode: "cors",
       body: JSON.stringify({
-        "date": now.toString(),
+        "date": date,
         "title": title,
         "values": values,
         "group_id": groupId,
         "doctors": [doctors],
-        "clinic": clinic,
+        "clinic_id": clinicId,
         "equipment": equipment,
         "description": description
       }),

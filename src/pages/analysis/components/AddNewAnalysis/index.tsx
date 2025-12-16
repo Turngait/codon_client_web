@@ -1,57 +1,71 @@
 import React, { useState } from 'react';
-// import ReactSelect from 'react-select'
 
 import PopUp from '../../../../components/PopUp';
 import Textinput from '../../../../components/TextInput';
 import Button from '../../../../components/Button';
-// import Select from '../../../../components/Select';
-import CloseIco from '../../../../assets/icons/close_ico2.png';
 
 import './index.scss';
-import AddAnalysisGroupModal from './AddAnalysisGroup';
-import { BtnSize } from '../../../../types/components';
+// import AddAnalysisGroupModal from './AddAnalysisGroup';
+// import { BtnSize } from '../../../../types/components';
+import Select from 'react-select';
 
 
 // TODO: typing!!!
 const AddNewAnalysisModal: React.FC<{
-    addNewAnalysis: (title: string, clinic: string, equipment: string, groupId: string, description: string, doctors: string, values: any, setMsg: (msg: string | null) => void) => void,
+    addNewAnalysis: (title: string, equipment: string, groupId: number, clinicId: number, description: string, doctors: string, values: any, date: string, setMsg: (msg: string | null) => void) => void,
     closeModal: (isOpen: boolean) => void,
-    groups: {_id: string, title: string}[],
-  }> = ({ addNewAnalysis, closeModal, groups }) => {
+    groups: {id: number, title: string}[],
+    clinics: {id: number, title: string}[],
+  }> = ({ addNewAnalysis, closeModal, groups, clinics }) => {
   const [title, setTitle] = useState('');
+  const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
-  const [clinic, setClinic] = useState('');
   const [equipment, setEquipment] = useState('');
   const [doctors, setDoctors] = useState<string>('');
   const [msg, setMsg] = useState<string | null>(null);
-  const [groupId, setGroupId] = useState(groups && groups.length ? groups[0]._id : '');
-  const [values, setValues] = useState<any>([]);
-  const [isAddGroupOpen, setIsAddPlaceOpen] = useState<boolean>(false);
+  const [groupId, setGroupId] = useState(groups && groups.length ? groups[0].id : 1);
+  const [clinicId, setClinicId] = useState(clinics && clinics.length ? clinics[0].id : 1);
 
-  const addNewValuesHandler = () => {
-    setValues([...values, {
-      title: "",
-      volume: "",
-      normal: "",
-      description: ""
-    }]);
-  }
-
-  const removeValueHandler = (id: any) => {
-    if (values.length) {
-      setValues(values.filter((_: any, i: any) => i !== id));
+  const getListForSelect = (groups: any) => {
+    const list = [];
+    for(const group of groups) {
+      list.push({
+        value: group.id || group.title,
+        label: group.title,
+      });
     }
+    return list;
   }
 
-  const setValueHandler = (id: number, value: any, type: string) => {
-    const oldValues = [...values]
-    oldValues[id][type] = value;
-    setValues(oldValues);
+  const setSelectedGroup = (group: any) => {
+    setGroupId(group.value);
   }
+
+  const setSelectedClinic = (group: any) => {
+    setClinicId(group.value);
+  }
+
+  // const addNewValuesHandler = () => {
+  //   setValues([...values, {
+  //     title: "",
+  //     volume: "",
+  //     normal: "",
+  //     description: ""
+  //   }]);
+  // }
+
+  // const removeValueHandler = (id: any) => {
+  //   if (values.length) {
+  //     setValues(values.filter((_: any, i: any) => i !== id));
+  //   }
+  // }
+
+  // const setValueHandler = (id: number, value: any, type: string) => {
+  //   const oldValues = [...values]
+  //   oldValues[id][type] = value;
+  //   setValues(oldValues);
+  // }
   
-  function addGroupHandle(title: string): void {
-      throw new Error('Function not implemented.');
-  }
 
   return (
     <PopUp title={"Add new analysis"} closeModal={() => closeModal(false)}>
@@ -60,10 +74,37 @@ const AddNewAnalysisModal: React.FC<{
       }
       <div className="addNew__form">
         <Textinput placeholder={`Title...`} onChange={(event) => setTitle(event.target.value)}/>
-        <Textinput placeholder={`Clinic...`} onChange={(event) => setClinic(event.target.value)}/>
         <Textinput placeholder={`Equipment...`} onChange={(event) => setEquipment(event.target.value)}/>
-        <Textinput placeholder={`Medical personal...`} onChange={(event) => setDoctors(event.target.value)}/>
-        <h4>Values:</h4>
+        <Textinput placeholder={`Doctors...`} onChange={(event) => setDoctors(event.target.value)}/>
+        <Textinput placeholder={`Date...`} onChange={(event) => setDate(event.target.value)} type='date'/>
+        <div className="addNew__form__boxWithBtn">
+          <Select
+            name="groups"
+            options={getListForSelect(groups)}
+            className="basic-single addNew__form__boxWithBtn__slct"
+            classNamePrefix="select"
+            isSearchable={true}
+            isClearable={true}
+            placeholder="Group..."
+            onChange={(event) => setSelectedGroup(event)}
+          />
+          <Button title='+' />
+        </div>
+        <div className="addNew__form__boxWithBtn">
+          <Select
+            name="clinics"
+            options={getListForSelect(clinics)}
+            className="basic-single addNew__form__boxWithBtn__slct"
+            classNamePrefix="select"
+            isSearchable={true}
+            isClearable={true}
+            placeholder="Clinics..."
+            onChange={(event) => setSelectedClinic(event)}
+          />
+          <Button title='+' />
+        </div>
+
+        {/* <h4>Values:</h4> 
           {
             values.map((value: any, idx: any) =>(
               <div key={idx}>
@@ -75,34 +116,8 @@ const AddNewAnalysisModal: React.FC<{
               </div>
             ))
           }
-        <Button title='Add new value' size={BtnSize.mediumBtn} onClick={addNewValuesHandler}/>
-        <label>
-          <p>
-            Choose analysis group
-            <button className="addNew__form__selectBox__plsBtn" onClick={() => setIsAddPlaceOpen(!isAddGroupOpen)}>
-              {
-                isAddGroupOpen ? <img className="addNew__form__clsIcon" src={CloseIco} alt="close"/> : <span>+</span>
-              }
-            </button>
-          </p>
-        </label>
-          {
-            isAddGroupOpen ? <div><AddAnalysisGroupModal addNewGroup={addGroupHandle} /></div> : null
-          }
-          <div className="addNew__form__selectBox">
-            {
-              groups && groups.length ? 
-                <select className="addNew__form__time" onChange={(event: any) => {setGroupId(event.target.value)}}>
-                  {
-                    groups.map((group) => {
-                      return <option key={group._id || ''} value={group._id}>{group.title}</option>
-                    })
-                    
-                  }
-                </select>
-              : null
-            }
-          </div>
+            */}
+        {/* <Button title='Add new value' size={BtnSize.mediumBtn} onClick={addNewValuesHandler}/> */}
         <textarea
           className="addNew__form__textarea"
           placeholder={`Description...`}
@@ -111,7 +126,7 @@ const AddNewAnalysisModal: React.FC<{
         </textarea>
         <Button
           title={'Add'}
-          onClick={() => addNewAnalysis(title, clinic, equipment, groupId, description, doctors, values, setMsg)} 
+          onClick={() => addNewAnalysis(title, equipment, groupId, clinicId, description, doctors, [], date, setMsg)} 
         />
       </div>
     </PopUp>

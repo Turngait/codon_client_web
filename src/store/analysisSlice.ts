@@ -5,11 +5,13 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 export interface AnalysisState {
   analysis: any,
   groups: any,
+  clinics: any
 }
 
 const initialState: AnalysisState = {
   analysis: null,
-  groups: null
+  groups: null,
+  clinics: null
 }
 
 export const analysisSlice = createSlice({
@@ -21,11 +23,14 @@ export const analysisSlice = createSlice({
     },
     updateGroups: (state, action: PayloadAction<any>) => {
       state.groups = action.payload
-    }
+    },
+    updateClinics: (state, action: PayloadAction<any>) => {
+      state.clinics = action.payload
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { editAnalysis, updateGroups } = analysisSlice.actions
+export const { editAnalysis, updateGroups, updateClinics } = analysisSlice.actions
 
 export default analysisSlice.reducer

@@ -6,7 +6,6 @@ import type { RootState } from '../../store/store'
 // import { editEmail } from './store/userSlice'
 import LeftMenu from '../../components/LeftMenu';
 import PlsButton from '../../components/PlsButton';
-import PageHeader from '../../components/PageHeader';
 import AddNewAnalysisModal from './components/AddNewAnalysis';
 import AnalysisItem from './components/AnalysisItem';
 import { addAnalysisService, deleteAnalysisOrValue } from './services';
@@ -23,13 +22,14 @@ function AnalysisPage() {
   const [isAddAnalysisOpen, setIsAddAnalysisOpen] = useState(false);
 
   const groups = useSelector((state: RootState) => state.analysis.groups);
+  const clinics = useSelector((state: RootState) => state.analysis.clinics) 
 
-  const addNewAnalysis = async (title: string, clinic: string, equipment: string, groupId: string, description: string, doctors: string, values: any, setMsg: (msg: string | null) => void) => {
+  const addNewAnalysis = async (title: string, equipment: string, groupId: number, clinicId: number, description: string, doctors: string, values: any, date:string, setMsg: (msg: string | null) => void) => {
     const token = localStorage.getItem("token");
     if(!token) {
       navigate('/');
     } else {
-      const data = await addAnalysisService(token, title, clinic, equipment, groupId, description, doctors, values);
+      const data = await addAnalysisService(token, title, equipment, groupId, clinicId, description, doctors, values, date);
       console.log(data);
       if (data.status === 200) {
         setIsAddAnalysisOpen(false);
@@ -78,7 +78,7 @@ function AnalysisPage() {
   return (
     <div className="analysis">
       {
-        isAddAnalysisOpen ? <AddNewAnalysisModal addNewAnalysis={addNewAnalysis} closeModal={closeModal} groups={groups}/> : null
+        isAddAnalysisOpen ? <AddNewAnalysisModal addNewAnalysis={addNewAnalysis} closeModal={closeModal} groups={groups} clinics={clinics}/> : null
       }
       <LeftMenu title='Analysis' />
       <div className='analysis__infoBox'>
@@ -91,7 +91,7 @@ function AnalysisPage() {
               ? 
               analysis.map(
                 (item: any) => (
-                  <AnalysisItem deleteAnalysis={deleteAnalysis} item={item} groups={groups} key={item._id} />
+                  <AnalysisItem deleteAnalysis={deleteAnalysis} item={item} groups={groups} key={item.id} />
                 )
               ) 
               : null

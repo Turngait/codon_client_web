@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 
-import { editAnalysis, updateGroups } from '../../store/analysisSlice';
+import { editAnalysis, updateGroups, updateClinics } from '../../store/analysisSlice';
 // import type { RootState } from '../../store/store'
 
 import LeftMenu from '../../components/LeftMenu';
@@ -29,6 +29,7 @@ function Dashboard() {
             if (data.data.analysis) {
               dispatch(editAnalysis(data.data.analysis.analysis));
               dispatch(updateGroups(data.data.analysis.groups));
+              dispatch(updateClinics(data.data.analysis.clinics));
               setAnalysisData(data.data.analysis.analysis);
             }
           }

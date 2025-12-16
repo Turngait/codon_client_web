@@ -11,7 +11,7 @@ const PopUp:React.FC<any> = ({title, closeModal, children}) => {
         {
           closeModal ? <img onClick={closeModal} className="modal__closeBtn" src={CloseIco} alt="close modal"/> : null
         }
-        <h2 className="modal__header">{title}</h2>
+        <p className="modal__header">{title}</p>
         {children}
       </div>
     </div>
