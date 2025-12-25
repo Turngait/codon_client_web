@@ -4,9 +4,9 @@ import { IButtonProps } from '../../types/components';
 
 import './index.scss';
 
-const Button: React.FC<IButtonProps> = ({title, onClick, size, className}) => {
+const Button: React.FC<IButtonProps> = ({title, onClick, size, className, btnType}) => {
   return (
-    <button type="button" className={`button ${size} ${className}`} onClick={onClick}><span>{title}</span></button>
+    <button type="button" className={`button ${size} ${className} ${btnType}`} onClick={onClick}><span>{title}</span></button>
   )
 }
 

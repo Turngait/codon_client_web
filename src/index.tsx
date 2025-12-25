@@ -4,13 +4,15 @@ import { Provider } from 'react-redux'
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from "react-router";
 
-import './index.scss';
 import App from './App';
 import { store } from './store/store'
 import Dashboard from './pages/dashboard';
 import AnalysisPage from './pages/analysis';
 import Profile from './pages/profile';
+import Settings from './pages/settings';
 import './i18n';
+import './index.scss';
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -25,6 +27,7 @@ root.render(
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/analysis" element={<AnalysisPage />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </Provider>
     </BrowserRouter>

@@ -13,7 +13,6 @@ const AnalysisItem: React.FC<{
   groups: any,
   deleteAnalysis: (id: string) => void
 }> = ({ item, groups, deleteAnalysis }) => {
-  console.log(item.analysis)
   // const { t } = useTranslation();
   const [isValuesOpen, setIsValuesOpen] = useState(false);
   const showGroupName = (groupId: string) => {

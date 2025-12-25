@@ -5,10 +5,15 @@ export enum BtnSize {
   mediumBtn="mediumBtn"
 }
 
+export enum BtnType {
+  dangerBtn = "dangerBtn",
+}
+
 export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   title: string,
   onClick?: () => void,
   size?: BtnSize,
+  btnType?: BtnType,
 }
 
 export interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {

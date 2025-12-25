@@ -14,9 +14,11 @@ import Select from 'react-select';
 const AddNewAnalysisModal: React.FC<{
     addNewAnalysis: (title: string, equipment: string, groupId: number, clinicId: number, description: string, doctors: string, values: any, date: string, setMsg: (msg: string | null) => void) => void,
     closeModal: (isOpen: boolean) => void,
+    openAddGroupCallback: (isOpen: boolean) => void,
+    openAddClinicCallback: (isOpen: boolean) => void,
     groups: {id: number, title: string}[],
     clinics: {id: number, title: string}[],
-  }> = ({ addNewAnalysis, closeModal, groups, clinics }) => {
+  }> = ({ addNewAnalysis, closeModal, groups, clinics, openAddGroupCallback, openAddClinicCallback }) => {
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
@@ -88,7 +90,7 @@ const AddNewAnalysisModal: React.FC<{
             placeholder="Group..."
             onChange={(event) => setSelectedGroup(event)}
           />
-          <Button title='+' />
+          <Button title='+' onClick={() => openAddGroupCallback(true)}/>
         </div>
         <div className="addNew__form__boxWithBtn">
           <Select
@@ -101,7 +103,7 @@ const AddNewAnalysisModal: React.FC<{
             placeholder="Clinics..."
             onChange={(event) => setSelectedClinic(event)}
           />
-          <Button title='+' />
+          <Button title='+' onClick={() => openAddClinicCallback(true)} />
         </div>
 
         {/* <h4>Values:</h4> 

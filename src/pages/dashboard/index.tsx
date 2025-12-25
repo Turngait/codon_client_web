@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 
@@ -9,12 +9,14 @@ import LeftMenu from '../../components/LeftMenu';
 import { getAllDataService } from './services';
 
 import './index.scss';
-import PageHeader from '../../components/PageHeader';
+import { useTranslation } from "react-i18next";
 
 
 function Dashboard() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+    const { t } = useTranslation();
+  
   const [ analysisData, setAnalysisData] = useState<any>(null);
 
   useEffect(() => {
@@ -44,12 +46,10 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
-      <title>Dashboard</title>
+      <title>{t('dashboard.title_main')}</title>
       <LeftMenu title={"Dashboard"} />
       <div className='dashboard__infoBox'>
-        <PageHeader title='Dashboard' />
-
-        
+        <p className='dashboard__infoBox__warnText'>{t('common.in_progress')}</p>
       </div>
     </div>
   );

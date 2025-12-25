@@ -3,7 +3,15 @@ export const en = {
     "common": {
       "email": "e-mail",
       "save": "Save",
-      "delete": "Delete"
+      "delete": "Delete",
+      "in_progress": "In progress"
+    },
+    "dashboard": {
+      "title_main": "Codon - Dashboard",
+    },
+    "analysis":{
+      "title_main": "Codon - Analysis",
+      "no_analysis": "Empty here. You can add analysis by pressing plus button at the bottom.",
     },
     "profile": {
       "title": "Profile",

@@ -1,0 +1,16 @@
+@import '../../../../styles/colors.scss';
+
+.addNewClinic {
+  &__form {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 2rem;
+    align-self: center;
+    font-size: 1.4rem;
+  }
+  &__msg {
+    color: $red;
+  }
+}
