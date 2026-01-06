@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
+
 import { NavLink } from "react-router";
 import './index.scss';
+
 
 const LeftMenu: React.FC<{title:string}> = ({title}) => {
   return (
@@ -9,6 +11,7 @@ const LeftMenu: React.FC<{title:string}> = ({title}) => {
         <h2 className="leftMenu__headerBox__appName">Codon</h2>
         <p className="leftMenu__headerBox__pageTitle">{title}</p>
       </div>
+      
       <div className="leftMenu__menuBox">
         <div className="leftMenu__menuBox__container">
           <NavLink to="/dashboard" className="leftMenu__menuBox__container__menuItem">Dashboard</NavLink>

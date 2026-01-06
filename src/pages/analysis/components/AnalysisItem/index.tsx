@@ -11,8 +11,10 @@ import { BtnSize } from '../../../../types/components';
 const AnalysisItem: React.FC<{
   item: any,
   groups: any,
-  deleteAnalysis: (id: string) => void
-}> = ({ item, groups, deleteAnalysis }) => {
+  clinics: any,
+  openAddValueModal: (id: number) => void,
+  deleteAnalysis: (id: number) => void
+}> = ({ item, groups, clinics, deleteAnalysis, openAddValueModal }) => {
   // const { t } = useTranslation();
   const [isValuesOpen, setIsValuesOpen] = useState(false);
   const showGroupName = (groupId: string) => {
@@ -23,13 +25,21 @@ const AnalysisItem: React.FC<{
       return "Common";
     }
   }
+  const showClinicName = (clinicId: string) => {
+    if (clinics && clinics.length) {
+      const clinic = clinics.filter((item: any) => item.id === clinicId);
+      return clinic && clinic.length ? clinic[0].title : "Not mentioned";
+    } else {
+      return "Not mentioned";
+    }
+  }
 
   return (
     <div key={item.analysis.id} className='analysis__infoBox__analysisBox__item'>
       <div className='analysis__infoBox__analysisBox__item__headerBox'>
         <h4 className='analysis__infoBox__analysisBox__item__headerBox__title'>{item.analysis.title}</h4>
         <p>{formatDateForLayout(item.analysis.date)}</p>
-        <p>in {item.analysis.clinic || "Not mentioned"}</p>
+        <p>in {showClinicName(item.analysis.clinic_id)}</p>
         <div className='analysis__infoBox__analysisBox__item__controlBox'>
           <img src={EditIco} alt="Edit" className='analysis__infoBox__analysisBox__item__controlBox__ico' />
           <img onClick={() => deleteAnalysis(item.analysis.id)} src={DelIco} alt="Delete" className='analysis__infoBox__analysisBox__item__controlBox__ico' />
@@ -41,7 +51,8 @@ const AnalysisItem: React.FC<{
         <p>group: {showGroupName(item.analysis.group_id)}</p>
       </div>
       {
-        isValuesOpen && item.values && item.values.length ? 
+      isValuesOpen ?
+        item.values && item.values.length ? 
             (
               <div className='analysis__infoBox__analysisBox__item__mainInfo__valuesBox'>
                 <table className='analysis__infoBox__analysisBox__item__mainInfo__valuesBox__valuesTable'>
@@ -71,10 +82,16 @@ const AnalysisItem: React.FC<{
                 }
                   </tbody>
                 </table>
-                <button className='analysis__infoBox__analysisBox__item__mainInfo__addValBtn'>Add value...</button>
+                <button className='analysis__infoBox__analysisBox__item__mainInfo__addValBtn' onClick={() => openAddValueModal(item.analysis.id)}>Add value...</button>
               </div>
             )
             
+          : (
+            <div className='analysis__infoBox__analysisBox__item__mainInfo__valuesBox'>
+              <p>No values added yet. Please click on "Add value" button to add new values</p>
+              <button className='analysis__infoBox__analysisBox__item__mainInfo__addValBtn' onClick={() => openAddValueModal(item.analysis.id)}>Add value...</button>
+            </div>
+          )
         : null
       }
       <div>

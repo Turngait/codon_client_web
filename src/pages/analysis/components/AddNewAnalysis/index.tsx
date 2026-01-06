@@ -47,28 +47,6 @@ const AddNewAnalysisModal: React.FC<{
     setClinicId(group.value);
   }
 
-  // const addNewValuesHandler = () => {
-  //   setValues([...values, {
-  //     title: "",
-  //     volume: "",
-  //     normal: "",
-  //     description: ""
-  //   }]);
-  // }
-
-  // const removeValueHandler = (id: any) => {
-  //   if (values.length) {
-  //     setValues(values.filter((_: any, i: any) => i !== id));
-  //   }
-  // }
-
-  // const setValueHandler = (id: number, value: any, type: string) => {
-  //   const oldValues = [...values]
-  //   oldValues[id][type] = value;
-  //   setValues(oldValues);
-  // }
-  
-
   return (
     <PopUp title={"Add new analysis"} closeModal={() => closeModal(false)}>
       {

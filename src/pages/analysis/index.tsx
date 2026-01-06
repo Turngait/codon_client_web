@@ -11,9 +11,11 @@ import AddNewAnalysisModal from './components/AddNewAnalysis';
 import AddAnalysisGroupModal from './components/AddNewAnalysisGroup';
 import AddClinicModal from './components/AddNewClinic';
 import AnalysisItem from './components/AnalysisItem';
-import { addAnalysisService, deleteAnalysisOrValue, addAnalysisGroupService, addClinicService } from './services';
+import { addAnalysisService, deleteAnalysisOrValue, addAnalysisGroupService, addClinicService, addValuesService } from './services';
 
 import './index.scss';
+import AddNewValuesModal from './components/AddNewValuesModal';
+import { IValue } from '../../interfaces/analysis';
 
 
 
@@ -24,6 +26,8 @@ function AnalysisPage() {
   const [isAddAnalysisOpen, setIsAddAnalysisOpen] = useState(false);
   const [isAddGroupOpen, setIsAddGroupOpen] = useState(false);
   const [isAddClinicOpen, setIsAddClinicOpen] = useState(false);
+  const [isAddValueOpen, setIsAddValueOpen] = useState(false);
+  const [idForAddBValueFunction, setIdForAddBValueFunction] = useState<number | null>(null);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -55,7 +59,7 @@ function AnalysisPage() {
     }
   }
 
-  const deleteAnalysis = async (id: string) => {
+  const deleteAnalysis = async (id: number) => {
     // const token = localStorage.getItem("token");
     // console.log(id);
     let oldAnalysis = [...analysis];
@@ -102,7 +106,7 @@ function AnalysisPage() {
     if(!token) {
       navigate('/');
     } else {
-      const data = await addClinicService(token, title, description, law_info, main_site);
+      const data = await addClinicService(token, title, description, law_info, main_site, mainPhone);
       if (data.status === 200) {
         setClinics([...clinics, {title, description, law_info, main_site, id: data.data.clinic_id}])
         setIsAddClinicOpen(false);
@@ -112,8 +116,29 @@ function AnalysisPage() {
     }
   }
 
+  const addValueHandler = async (analysisId: number, values: IValue[], setMsg: (msg: string | null) => void) => {
+    const token = localStorage.getItem("token");
+
+    if(!token) {
+      navigate('/');
+    } else {
+      const data = await addValuesService(token, analysisId, values);
+      if (data.status === 200) {
+        console.log(data)
+        setIsAddClinicOpen(false);
+      } else {
+        setMsg("Something goes wrong, try again latter");
+      }
+    }
+  }
+
   const closeModal = () => {
     setIsAddAnalysisOpen(false);
+  }
+
+  const openAddValues = (id: number) => {
+    setIsAddValueOpen(true)
+    setIdForAddBValueFunction(id)
   }
 
   useEffect(() => {
@@ -126,6 +151,11 @@ function AnalysisPage() {
   return (
     <div className="analysis">
       <title>{t('analysis.title_main')}</title>
+      {
+        isAddValueOpen && idForAddBValueFunction ?
+          <AddNewValuesModal closeModal={setIsAddValueOpen} analysisId={idForAddBValueFunction} addValueHandler={addValueHandler} />
+          : null
+      }
       {
         isAddAnalysisOpen 
           ? 
@@ -162,7 +192,7 @@ function AnalysisPage() {
               ? 
               analysis.map(
                 (item: any) => (
-                  <AnalysisItem deleteAnalysis={deleteAnalysis} item={item} groups={groups} key={item.id} />
+                  <AnalysisItem deleteAnalysis={deleteAnalysis} item={item} groups={groups} clinics={clinics} key={item.id} openAddValueModal={openAddValues} />
                 )
               ) 
               : <p className='analysis__infoBox__analysisBox__empty'>{t('analysis.no_analysis')}</p>
