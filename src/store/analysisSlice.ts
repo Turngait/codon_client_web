@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
+import { IAnalyses } from '../interfaces/analysis'
 
 // TODO: add types
 export interface AnalysisState {
@@ -18,7 +19,7 @@ export const analysisSlice = createSlice({
   name: 'counter',
   initialState,
   reducers: {
-    editAnalysis: (state, action: PayloadAction<any>) => {
+    editAnalysis: (state, action: PayloadAction<IAnalyses[]>) => {
       state.analysis = action.payload
     },
     updateGroups: (state, action: PayloadAction<any>) => {

@@ -15,7 +15,6 @@ export async function getAllDataService(token: string): Promise<{status: number,
       return res.json()
     })
     .then(data => {
-      console.log(data)
       if (data && data.status) {
         return data;
       }

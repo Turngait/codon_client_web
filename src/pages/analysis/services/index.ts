@@ -129,7 +129,7 @@ export async function addClinicService(token: string, title: string, description
     return {data: res.data || null, status: res.status, msg: res.msg || null};
 }
 
-export async function addValuesService(token: string, analysis_id: number, values: IValue[]): Promise<{status: number, data: any, msg?: string | null}> {
+export async function addValuesService(token: string, analysis_id: number, values: IValue[]): Promise<{status: number, data: IValue[], msg?: string | null}> {
   const res = await fetch(API_URL + '/analysis/value', {
       method: "POST",
       headers: {
@@ -157,4 +157,33 @@ export async function addValuesService(token: string, analysis_id: number, value
     });
   
     return {data: res.data || null, status: res.status, msg: res.msg || null};
+}
+
+export async function deleteValuesService(token: string, value_id: number): Promise<{status: number, msg?: string | null}> {
+  const res = await fetch(API_URL + '/analysis/value', {
+      method: "DELETE",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json;charset=utf-8",
+        "token": API_KEY,
+        "user_token": token
+      },
+      mode: "cors",
+      body: JSON.stringify({
+        "id": value_id,
+      }),
+    })
+    .then(res => {
+      return res.json()
+    })
+    .then(data => {
+      if (data && data.status) {
+        return data;
+      }
+      else {
+        return {status: data, msg: null}
+      }
+    });
+  
+    return {status: res.status, msg: res.msg || null};
 }

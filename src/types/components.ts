@@ -2,7 +2,8 @@ import { ChangeEvent, ButtonHTMLAttributes, InputHTMLAttributes } from 'react';
 
 export enum BtnSize {
   largeBtn = "largeBtn",
-  mediumBtn="mediumBtn"
+  mediumBtn = "mediumBtn",
+  smallBtn = "smallBtn",
 }
 
 export enum BtnType {

@@ -11,16 +11,17 @@ import AddNewAnalysisModal from './components/AddNewAnalysis';
 import AddAnalysisGroupModal from './components/AddNewAnalysisGroup';
 import AddClinicModal from './components/AddNewClinic';
 import AnalysisItem from './components/AnalysisItem';
-import { addAnalysisService, deleteAnalysisOrValue, addAnalysisGroupService, addClinicService, addValuesService } from './services';
+import { addAnalysisService, addAnalysisGroupService, addClinicService, addValuesService, deleteValuesService } from './services';
+import { editAnalysis } from '../../store/analysisSlice';
 
 import './index.scss';
 import AddNewValuesModal from './components/AddNewValuesModal';
-import { IValue } from '../../interfaces/analysis';
+import { IAnalyses, IValue } from '../../interfaces/analysis';
 
 
 
 function AnalysisPage() {
-  const [analysis, setAnalysis] = useState<[any]>(useSelector((state: RootState) => state.analysis.analysis));
+  const [analysis, setAnalysis] = useState<IAnalyses[]>(useSelector((state: RootState) => state.analysis.analysis));
   const [groups, setAnalysisGroups] = useState<any>(useSelector((state: RootState) => state.analysis.groups));
   const [clinics, setClinics] = useState<any>(useSelector((state: RootState) => state.analysis.clinics));
   const [isAddAnalysisOpen, setIsAddAnalysisOpen] = useState(false);
@@ -62,15 +63,15 @@ function AnalysisPage() {
   const deleteAnalysis = async (id: number) => {
     // const token = localStorage.getItem("token");
     // console.log(id);
-    let oldAnalysis = [...analysis];
-        for (let idx in oldAnalysis) {
-          if(oldAnalysis[idx]._id === id) {
-            oldAnalysis.splice(+idx, 1);
-            break;
-          }
-          oldAnalysis[idx].values = oldAnalysis[idx].values.filter((val:any) => val._id !== id);   
-        }
-        console.log(oldAnalysis)
+    // let oldAnalysis = [...analysis];
+    //     for (let idx in oldAnalysis) {
+    //       if(oldAnalysis[idx].analysis.id === id) {
+    //         oldAnalysis.splice(+idx, 1);
+    //         break;
+    //       }
+    //       oldAnalysis[idx].values = oldAnalysis[idx].values.filter((val:any) => val._id !== id);   
+    //     }
+    //     console.log(oldAnalysis)
     // if(!token) {
     //   navigate('/');
     // } else {
@@ -122,15 +123,52 @@ function AnalysisPage() {
     if(!token) {
       navigate('/');
     } else {
-      const data = await addValuesService(token, analysisId, values);
-      if (data.status === 200) {
-        console.log(data)
-        setIsAddClinicOpen(false);
+      const res = await addValuesService(token, analysisId, values);
+      if (res.status === 200 && res.data) {
+        let oldAnalysis = JSON.parse(JSON.stringify(analysis));;
+        for (let ana of oldAnalysis) {
+          console.log(ana)
+          if (ana.id === analysisId) {
+            for (const val of res.data) ana.values.push(val)
+          }
+        }
+        setAnalysis(oldAnalysis);
+        dispatch(editAnalysis(oldAnalysis));
+
+        setIsAddValueOpen(false);
       } else {
         setMsg("Something goes wrong, try again latter");
       }
     }
   }
+
+  const deleteValueHandler = async (value_id: number, setMsg: (msg: string | null) => void) => {
+    console.log(value_id)
+    const token = localStorage.getItem("token");
+
+    if(!token) {
+      navigate('/');
+    } else {
+      const res = await deleteValuesService(token, value_id);
+      if (res.status === 200) {
+        let oldAnalysis: IAnalyses[] = JSON.parse(JSON.stringify(analysis));;
+        for (let ana of oldAnalysis) {
+          for (const idx in ana.values) {
+            if (ana.values[idx].id === value_id) {
+              ana.values.slice(+idx, 1)
+            }
+          }
+
+        }
+        setAnalysis(oldAnalysis);
+        dispatch(editAnalysis(oldAnalysis));
+
+        setIsAddValueOpen(false);
+      } else {
+        setMsg("Something goes wrong, try again latter");
+      }
+    }
+  } 
 
   const closeModal = () => {
     setIsAddAnalysisOpen(false);
@@ -192,7 +230,15 @@ function AnalysisPage() {
               ? 
               analysis.map(
                 (item: any) => (
-                  <AnalysisItem deleteAnalysis={deleteAnalysis} item={item} groups={groups} clinics={clinics} key={item.id} openAddValueModal={openAddValues} />
+                  <AnalysisItem
+                    deleteAnalysis={deleteAnalysis}
+                    item={item}
+                    groups={groups}
+                    clinics={clinics}
+                    key={item.id}
+                    openAddValueModal={openAddValues}
+                    deleteValue={deleteValueHandler}
+                  />
                 )
               ) 
               : <p className='analysis__infoBox__analysisBox__empty'>{t('analysis.no_analysis')}</p>

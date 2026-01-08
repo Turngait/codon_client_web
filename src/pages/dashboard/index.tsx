@@ -26,13 +26,13 @@ function Dashboard() {
     } else {
       const fetchData = async (token: string) => {
         try {
-          const data = await getAllDataService(token);
-          if (data.status && data.status === 200) {
-            if (data.data.analysis) {
-              dispatch(editAnalysis(data.data.analysis.analysis));
-              dispatch(updateGroups(data.data.analysis.groups));
-              dispatch(updateClinics(data.data.analysis.clinics));
-              setAnalysisData(data.data.analysis.analysis);
+          const res = await getAllDataService(token);
+          if (res.status && res.status === 200) {
+            if (res.data.analysis) {
+              dispatch(editAnalysis(res.data.analysis.analysis));
+              dispatch(updateGroups(res.data.analysis.groups));
+              dispatch(updateClinics(res.data.analysis.clinics));
+              setAnalysisData(res.data.analysis.analysis);
             }
           }
         } catch {

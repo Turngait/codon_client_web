@@ -3,9 +3,10 @@ import PopUp from "../../../../components/PopUp";
 import Textinput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
 
-import './index.scss';
 import { BtnSize } from "../../../../types/components";
 import { IValue } from "../../../../interfaces/analysis";
+import DeleteIco from '../../../../assets/icons/DeleteIco.svg';
+import './index.scss';
 
 const AddNewValueModal: React.FC<{
   closeModal: (isClose: boolean) => void,
@@ -49,26 +50,26 @@ enum valueTypes {
   
   return (
     <PopUp title={"Add new values"} closeModal={() => closeModal(false)}>
-      <div className="addNewGroup__form">
+      <div className="addNewValue__form">
         {
-          msg ? <p className="addNewGroup__msg">{msg}</p> : null
+          msg ? <p className="addNewValue__msg">{msg}</p> : null
         }
-        <h4>Values:</h4> 
+        <h4 className="addNewValue__form__minTitle">Values:</h4> 
           {
             values.map((value: any, idx: any) =>(
-              <div key={idx}>
+              <div className="addNewValue__form__itemBox" key={idx}>
                 <Textinput placeholder='Title...' onChange={(event) => setValueHandler(idx, event.target.value, valueTypes.title)} value={value.title}/>
                 <Textinput placeholder='Value...' onChange={(event) => setValueHandler(idx, event.target.value, valueTypes.volume)} value={value.volume} />
                 <Textinput placeholder='Normal...' onChange={(event) => setValueHandler(idx, event.target.value, valueTypes.normal)} value={value.normal} />
                 <Textinput placeholder='Description...' onChange={(event) => setValueHandler(idx, event.target.value, valueTypes.description)} value={value.description} />
-                <button className="addNew__form__selectBox__plsBtn" onClick={() => removeValueHandler(idx)}>Remove</button>
+                <img className="addNewValue__form__itemBox__delIco" src={DeleteIco} onClick={() => removeValueHandler(idx)} alt="Remove value"/>
               </div>
             ))
           }
            
-        <Button title='Add new values' size={BtnSize.mediumBtn} onClick={addNewValuesHandler}/>
+        <Button title='+ Add values' size={BtnSize.smallBtn} onClick={addNewValuesHandler}/>
         <Button
-            title={'Add'}
+            title={'Save'}
             onClick={() => addValueHandler(analysisId, values, setMsg)} 
           />
       </div>
