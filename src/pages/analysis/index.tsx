@@ -29,6 +29,7 @@ function AnalysisPage() {
   const [isAddClinicOpen, setIsAddClinicOpen] = useState(false);
   const [isAddValueOpen, setIsAddValueOpen] = useState(false);
   const [idForAddBValueFunction, setIdForAddBValueFunction] = useState<number | null>(null);
+  const [msg, setMsg] = useState<string | null>(null)
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -127,7 +128,6 @@ function AnalysisPage() {
       if (res.status === 200 && res.data) {
         let oldAnalysis = JSON.parse(JSON.stringify(analysis));;
         for (let ana of oldAnalysis) {
-          console.log(ana)
           if (ana.id === analysisId) {
             for (const val of res.data) ana.values.push(val)
           }
@@ -142,8 +142,7 @@ function AnalysisPage() {
     }
   }
 
-  const deleteValueHandler = async (value_id: number, setMsg: (msg: string | null) => void) => {
-    console.log(value_id)
+  const deleteValueHandler = async (value_id: number) => {
     const token = localStorage.getItem("token");
 
     if(!token) {
@@ -151,14 +150,9 @@ function AnalysisPage() {
     } else {
       const res = await deleteValuesService(token, value_id);
       if (res.status === 200) {
-        let oldAnalysis: IAnalyses[] = JSON.parse(JSON.stringify(analysis));;
-        for (let ana of oldAnalysis) {
-          for (const idx in ana.values) {
-            if (ana.values[idx].id === value_id) {
-              ana.values.slice(+idx, 1)
-            }
-          }
-
+        let oldAnalysis: IAnalyses[] = JSON.parse(JSON.stringify(analysis));
+        for (let ana_id in oldAnalysis) {
+          oldAnalysis[ana_id].values = oldAnalysis[ana_id].values.filter((val: IValue, i: number) => val.id !== value_id)
         }
         setAnalysis(oldAnalysis);
         dispatch(editAnalysis(oldAnalysis));
@@ -229,7 +223,7 @@ function AnalysisPage() {
             analysis && analysis.length 
               ? 
               analysis.map(
-                (item: any) => (
+                (item: IAnalyses) => (
                   <AnalysisItem
                     deleteAnalysis={deleteAnalysis}
                     item={item}
