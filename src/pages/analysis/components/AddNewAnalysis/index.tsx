@@ -1,23 +1,21 @@
 import React, { useState } from 'react';
+import Select, { SingleValue } from 'react-select';
 
 import PopUp from '../../../../components/PopUp';
 import Textinput from '../../../../components/TextInput';
 import Button from '../../../../components/Button';
+import { IClinic, IValue } from '../../../../interfaces/analysis';
 
 import './index.scss';
-// import AddAnalysisGroupModal from './AddAnalysisGroup';
-// import { BtnSize } from '../../../../types/components';
-import Select from 'react-select';
-
 
 // TODO: typing!!!
 const AddNewAnalysisModal: React.FC<{
-    addNewAnalysis: (title: string, equipment: string, groupId: number, clinicId: number, description: string, doctors: string, values: any, date: string, setMsg: (msg: string | null) => void) => void,
+    addNewAnalysis: (title: string, equipment: string, groupId: number, clinicId: number, description: string, doctors: string, values: IValue[] | [], date: string, setMsg: (msg: string | null) => void) => void,
     closeModal: (isOpen: boolean) => void,
     openAddGroupCallback: (isOpen: boolean) => void,
     openAddClinicCallback: (isOpen: boolean) => void,
     groups: {id: number, title: string}[],
-    clinics: {id: number, title: string}[],
+    clinics: IClinic[],
   }> = ({ addNewAnalysis, closeModal, groups, clinics, openAddGroupCallback, openAddClinicCallback }) => {
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
@@ -26,7 +24,7 @@ const AddNewAnalysisModal: React.FC<{
   const [doctors, setDoctors] = useState<string>('');
   const [msg, setMsg] = useState<string | null>(null);
   const [groupId, setGroupId] = useState(groups && groups.length ? groups[0].id : 1);
-  const [clinicId, setClinicId] = useState(clinics && clinics.length ? clinics[0].id : 1);
+  const [clinicId, setClinicId] = useState<number>(clinics && clinics.length && clinics[0].id ? clinics[0].id : 1);
 
   const getListForSelect = (groups: any) => {
     const list = [];
@@ -39,12 +37,12 @@ const AddNewAnalysisModal: React.FC<{
     return list;
   }
 
-  const setSelectedGroup = (group: any) => {
-    setGroupId(group.value);
+  const setSelectedGroup = (group: SingleValue<{value: number;}>) => {
+    setGroupId(group ? group.value : 0);
   }
 
-  const setSelectedClinic = (group: any) => {
-    setClinicId(group.value);
+  const setSelectedClinic = (clinic: SingleValue<{value: number;}>) => {
+    setClinicId(clinic ? clinic.value : 0);
   }
 
   return (
@@ -83,21 +81,6 @@ const AddNewAnalysisModal: React.FC<{
           />
           <Button title='+' onClick={() => openAddClinicCallback(true)} />
         </div>
-
-        {/* <h4>Values:</h4> 
-          {
-            values.map((value: any, idx: any) =>(
-              <div key={idx}>
-                <Textinput placeholder='Title...' onChange={(event) => setValueHandler(idx, event.target.value, "title")} value={value.title}/>
-                <Textinput placeholder='Value...' onChange={(event) => setValueHandler(idx, event.target.value, "volume")} value={value.volume} />
-                <Textinput placeholder='Normal...' onChange={(event) => setValueHandler(idx, event.target.value, "normal")} value={value.normal} />
-                <Textinput placeholder='Description...' onChange={(event) => setValueHandler(idx, event.target.value, "description")} value={value.description} />
-                <button className="addNew__form__selectBox__plsBtn" onClick={() => removeValueHandler(idx)}>Remove</button>
-              </div>
-            ))
-          }
-            */}
-        {/* <Button title='Add new value' size={BtnSize.mediumBtn} onClick={addNewValuesHandler}/> */}
         <textarea
           className="addNew__form__textarea"
           placeholder={`Description...`}

@@ -16,14 +16,14 @@ import { editAnalysis } from '../../store/analysisSlice';
 
 import './index.scss';
 import AddNewValuesModal from './components/AddNewValuesModal';
-import { IAnalyses, IValue } from '../../interfaces/analysis';
+import { IAnalyses, IClinic, IValue } from '../../interfaces/analysis';
 
 
 
 function AnalysisPage() {
   const [analysis, setAnalysis] = useState<IAnalyses[]>(useSelector((state: RootState) => state.analysis.analysis));
   const [groups, setAnalysisGroups] = useState<any>(useSelector((state: RootState) => state.analysis.groups));
-  const [clinics, setClinics] = useState<any>(useSelector((state: RootState) => state.analysis.clinics));
+  const [clinics, setClinics] = useState<IClinic[]>(useSelector((state: RootState) => state.analysis.clinics));
   const [isAddAnalysisOpen, setIsAddAnalysisOpen] = useState(false);
   const [isAddGroupOpen, setIsAddGroupOpen] = useState(false);
   const [isAddClinicOpen, setIsAddClinicOpen] = useState(false);
@@ -57,6 +57,7 @@ function AnalysisPage() {
         setIsAddAnalysisOpen(false);
       } else {
         setMsg("Something goes wrong, try again latter");
+        setTimeout(() => setMsg(null), 4000);
       }
     }
   }
@@ -98,6 +99,7 @@ function AnalysisPage() {
         setIsAddGroupOpen(false);
       } else {
         setMsg("Something goes wrong, try again latter");
+        setTimeout(() => setMsg(null), 4000);
       }
     }
   }
@@ -114,6 +116,7 @@ function AnalysisPage() {
         setIsAddClinicOpen(false);
       } else {
         setMsg("Something goes wrong, try again latter");
+        setTimeout(() => setMsg(null), 4000);
       }
     }
   }
@@ -138,6 +141,7 @@ function AnalysisPage() {
         setIsAddValueOpen(false);
       } else {
         setMsg("Something goes wrong, try again latter");
+        setTimeout(() => setMsg(null), 4000);
       }
     }
   }
@@ -160,6 +164,7 @@ function AnalysisPage() {
         setIsAddValueOpen(false);
       } else {
         setMsg("Something goes wrong, try again latter");
+        setTimeout(() => setMsg(null), 4000);
       }
     }
   } 
@@ -215,8 +220,10 @@ function AnalysisPage() {
       }
       <LeftMenu title='Analysis' />
       <div className='analysis__infoBox'>
+        {
+          msg ? <p className='analysis__infoBox__msg'>{msg}</p> : null
+        }
         <div className='analysis__infoBox__sortingBox'>
-
         </div>
         <div className='analysis__infoBox__analysisBox'>
           {

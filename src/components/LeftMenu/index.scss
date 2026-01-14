@@ -40,6 +40,10 @@
         font-size: 1.6rem;
         text-decoration: underline;
         transition-duration: 0.8s;
+        border: none;
+        background: none;
+        text-align: left;
+        padding: 0;
         
         &:hover {
           opacity: 0.6;

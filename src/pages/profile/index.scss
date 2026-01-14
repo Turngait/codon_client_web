@@ -9,6 +9,12 @@
   &__infoBox {
     padding: 5rem 6rem;
 
+    &__msg {
+      font-size: 1.8rem;
+      color: $info;
+      position: absolute;
+    }
+
     &__dataBox {
       margin-top: 3.5rem;
       display: flex;

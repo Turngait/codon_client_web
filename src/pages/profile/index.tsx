@@ -1,24 +1,51 @@
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 // import { useSelector, useDispatch } from 'react-redux'
 // import type { RootState } from './store/store'
 // import { editEmail } from './store/userSlice'
 import LeftMenu from '../../components/LeftMenu';
-
-import './index.scss';
 import Textinput from '../../components/TextInput';
 import Button from '../../components/Button';
 import { BtnType } from '../../types/components';
 
+import { changePasswordService } from './services';
+
+import './index.scss';
 
 
 function Profile() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const [oldPass, setOldPass] = useState('');
+  const [newPass, setNewPass] = useState('');
+  const [msg, setMsg] = useState<string | null>(null);
+
+  const changePass = async () => {
+    const token = localStorage.getItem("token");
+
+    if(!token) {
+      navigate('/');
+    } else {
+      const res = await changePasswordService(token, oldPass, newPass);
+      if (res.status === 200) {
+        setMsg('Password was changed');
+      } else {
+        setMsg('Something goes wrong, try again latter');
+      }
+      setTimeout(() => setMsg(null), 4000);
+    }
+  } 
 
   return (
     <div className="profile">
       <title>{t("profile.title")}</title>
       <LeftMenu title='Profile' />
       <div className='profile__infoBox'>
+        {
+          msg ? <p className='profile__infoBox__msg'>{msg}</p> : null
+        }
         <div className='profile__infoBox__dataBox'>
           <div className='profile__infoBox__dataBox__data'>
             <div className='profile__infoBox__dataBox__data__item'>
@@ -47,9 +74,9 @@ function Profile() {
           <div className='profile__infoBox__dataBox__data'>
             <div className='profile__infoBox__dataBox__data__item'>
               <p className='profile__infoBox__dataBox__data__item__title'>{t("profile.change_pass")}</p>
-              <Textinput placeholder={t("profile.old_pass")} type='password' />
-              <Textinput placeholder={t("profile.new_pass")} type='password' />
-              <Button title={t("common.save")} />
+              <Textinput placeholder={t("profile.old_pass")} type='password' onChange={(event) => setOldPass(event.target.value)} />
+              <Textinput placeholder={t("profile.new_pass")} type='password' onChange={(event) => setNewPass(event.target.value)} />
+              <Button title={t("common.save")} onClick={changePass}/>
             </div>
           </div>
           <div className='profile__infoBox__dataBox__data'>
@@ -57,7 +84,6 @@ function Profile() {
               <p className='profile__infoBox__dataBox__data__item__title'>{t("profile.del_acc_title")}</p>
               <p>{t("profile.del_acc_text")}</p>
               <Button title={t("common.delete")} className='profile__infoBox__dataBox__data__item__deleteBtn' btnType={BtnType.dangerBtn} />
-              
             </div>
           </div>
         </div>

@@ -9,6 +9,12 @@
   &__infoBox {
     padding: 7rem 6rem;
 
+    &__msg {
+      font-size: 1.8rem;
+      color: $info;
+      position: absolute;
+    }
+
     &__sortingBox {
       margin-bottom: 6rem;
     }

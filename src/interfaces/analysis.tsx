@@ -17,3 +17,12 @@ export interface IAnalyses {
   description: string;
   values: IValue[]
 }
+
+export interface IClinic {
+  id?: number;
+  title: string;
+  law_info?: string;
+  main_site?: string;
+  description: string;
+  phone?: string;
+}
