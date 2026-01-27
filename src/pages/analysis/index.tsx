@@ -11,17 +11,19 @@ import AddNewAnalysisModal from './components/AddNewAnalysis';
 import AddAnalysisGroupModal from './components/AddNewAnalysisGroup';
 import AddClinicModal from './components/AddNewClinic';
 import AnalysisItem from './components/AnalysisItem';
-import { addAnalysisService, addAnalysisGroupService, addClinicService, addValuesService, deleteValuesService } from './services';
+import { addAnalysisService, addAnalysisGroupService, addClinicService, addValuesService, deleteValuesService, deleteAnalysisOrValue, editAnalysisService } from './services';
 import { editAnalysis } from '../../store/analysisSlice';
 
-import './index.scss';
 import AddNewValuesModal from './components/AddNewValuesModal';
+import EditAnalysesModal from './components/EditAnalysesModal';
 import { IAnalyses, IClinic, IValue } from '../../interfaces/analysis';
 
+import './index.scss';
 
 
 function AnalysisPage() {
   const [analysis, setAnalysis] = useState<IAnalyses[]>(useSelector((state: RootState) => state.analysis.analysis));
+  const [editableAnalysis, setEditableAnalysis] = useState<IAnalyses | null>(null)
   const [groups, setAnalysisGroups] = useState<any>(useSelector((state: RootState) => state.analysis.groups));
   const [clinics, setClinics] = useState<IClinic[]>(useSelector((state: RootState) => state.analysis.clinics));
   const [isAddAnalysisOpen, setIsAddAnalysisOpen] = useState(false);
@@ -52,9 +54,60 @@ function AnalysisPage() {
     if(!token) {
       navigate('/');
     } else {
-      const data = await addAnalysisService(token, title, equipment, groupId, clinicId, description, doctors, values, date);
-      if (data.status === 200) {
+      const res = await addAnalysisService(token, title, equipment, groupId, clinicId, description, doctors, values, date);
+      if (res.status === 200) {
         setIsAddAnalysisOpen(false);
+        setAnalysis([...analysis, {
+          title, equipment, group_id: groupId, clinic_id: clinicId, description, doctors, date,
+          id: res.data.id,
+          values: []
+        }]);
+      } else {
+        setMsg("Something goes wrong, try again latter");
+        setTimeout(() => setMsg(null), 4000);
+      }
+    }
+  }
+
+  const openEditAnalysisHandler = async (id: number) => {
+    const editableItem = analysis.filter((ana: IAnalyses) => ana.id === id)[0];
+    setEditableAnalysis(editableItem)
+  }
+
+  const editAnalysisHandler = async (
+      title: string,
+      equipment: string,
+      groupId: number,
+      clinicId: number,
+      description: string,
+      doctors: string,
+      values: any,
+      date:string,
+      setMsg: (msg: string | null) => void
+    ) => {
+    const token = localStorage.getItem("token");
+
+    if(!token) {
+      navigate('/');
+    } else {
+      const id = editableAnalysis ?  editableAnalysis.id : 0;
+      const res = await editAnalysisService(token, id, title, equipment, groupId, clinicId, description, doctors, values, date);
+      if (res.status === 200) {
+        let oldAnalysis: IAnalyses[] = JSON.parse(JSON.stringify(analysis));
+        for (const item of oldAnalysis) {
+          if (item.id === id) {
+            item.title = title;
+            item.clinic_id = clinicId;
+            item.equipment = equipment;
+            item.group_id = groupId;
+            item.description = description;
+            item.doctors = doctors;
+            item.values = values;
+            item.date = date
+          }
+        }
+        setAnalysis(oldAnalysis);
+        closeEditAnalysisModal();
       } else {
         setMsg("Something goes wrong, try again latter");
         setTimeout(() => setMsg(null), 4000);
@@ -63,28 +116,22 @@ function AnalysisPage() {
   }
 
   const deleteAnalysis = async (id: number) => {
-    // const token = localStorage.getItem("token");
-    // console.log(id);
-    // let oldAnalysis = [...analysis];
-    //     for (let idx in oldAnalysis) {
-    //       if(oldAnalysis[idx].analysis.id === id) {
-    //         oldAnalysis.splice(+idx, 1);
-    //         break;
-    //       }
-    //       oldAnalysis[idx].values = oldAnalysis[idx].values.filter((val:any) => val._id !== id);   
-    //     }
-    //     console.log(oldAnalysis)
-    // if(!token) {
-    //   navigate('/');
-    // } else {
-    //   const data = await deleteAnalysisOrValue(token, id);
-    //   console.log(data);
-    //   if (data.status === 200) {
+    const token = localStorage.getItem("token");
 
-    //   } else {
-    //     console.log("Something goes wrong, try again latter");
-    //   }
-    // }
+    if(!token) {
+      navigate('/');
+    } else {
+      const res = await deleteAnalysisOrValue(token, id);
+      console.log(res);
+      if (res.status === 200) {
+        let oldAnalysis: IAnalyses[] = JSON.parse(JSON.stringify(analysis));
+        oldAnalysis = oldAnalysis.filter((ana: IAnalyses) => ana.id !== id);
+        setAnalysis(oldAnalysis);
+      } else {
+        setMsg("Something goes wrong, try again latter");
+        setTimeout(() => setMsg(null), 4000);
+      }
+    }
   }
 
   const addGroupHandler = async (title: string, description: string, setMsg: (msg: string | null) => void) => {
@@ -173,6 +220,10 @@ function AnalysisPage() {
     setIsAddAnalysisOpen(false);
   }
 
+  const closeEditAnalysisModal = () => {
+    setEditableAnalysis(null);
+  }
+
   const openAddValues = (id: number) => {
     setIsAddValueOpen(true)
     setIdForAddBValueFunction(id)
@@ -191,6 +242,20 @@ function AnalysisPage() {
       {
         isAddValueOpen && idForAddBValueFunction ?
           <AddNewValuesModal closeModal={setIsAddValueOpen} analysisId={idForAddBValueFunction} addValueHandler={addValueHandler} />
+          : null
+      }
+      {
+        editableAnalysis 
+          ? 
+            <EditAnalysesModal
+              editableItem={editableAnalysis}
+              editAnalysisHandler={editAnalysisHandler}
+              closeModal={closeEditAnalysisModal}
+              groups={groups}
+              clinics={clinics}
+              openAddGroupCallback={setIsAddGroupOpen}
+              openAddClinicCallback={setIsAddClinicOpen}
+            />
           : null
       }
       {
@@ -239,6 +304,7 @@ function AnalysisPage() {
                     key={item.id}
                     openAddValueModal={openAddValues}
                     deleteValue={deleteValueHandler}
+                    openEditAnalysisHandler={openEditAnalysisHandler}
                   />
                 )
               ) 

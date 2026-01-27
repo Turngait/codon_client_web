@@ -17,8 +17,9 @@ const AnalysisItem: React.FC<{
   clinics: any,
   openAddValueModal: (id: number) => void,
   deleteAnalysis: (id: number) => void,
-  deleteValue: (id: number) => void
-}> = ({ item, groups, clinics, deleteAnalysis, openAddValueModal, deleteValue }) => {
+  deleteValue: (id: number) => void,
+  openEditAnalysisHandler: (id: number) => void,
+}> = ({ item, groups, clinics, deleteAnalysis, openAddValueModal, deleteValue, openEditAnalysisHandler }) => {
   // const { t } = useTranslation();
   const [isValuesOpen, setIsValuesOpen] = useState(false);
   const [values, setValues] = useState(item.values && item.values.length ? [...item.values] : []);
@@ -59,7 +60,7 @@ const AnalysisItem: React.FC<{
         <p>{formatDateForLayout(item.date)}</p>
         <p>in {showClinicName(item.clinic_id)}</p>
         <div className='item__controlBox'>
-          <img src={EditIco} alt="Edit" className='item__controlBox__ico' />
+          <img src={EditIco} alt="Edit" className='item__controlBox__ico' onClick={() => openEditAnalysisHandler(item.id)} />
           <img onClick={() => deleteAnalysis(item.id)} src={DelIco} alt="Delete" className='item__controlBox__ico' />
         </div>
       </div>
