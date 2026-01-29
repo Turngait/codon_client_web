@@ -13,6 +13,10 @@ export const en = {
       "title_main": "Codon - Analysis",
       "no_analysis": "Empty here. You can add analysis by pressing plus button at the bottom.",
     },
+    "clinics": {
+      "title_main": "Codon - Clinics",
+      "no_clinics": "Empty here. You can add clinics by pressing plus button at the bottom.",
+    },
     "profile": {
       "title": "Profile",
       "email": "E-mail",

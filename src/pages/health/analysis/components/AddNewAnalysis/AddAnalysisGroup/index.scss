@@ -1,0 +1,26 @@
+@import '../../../../../../styles/colors.scss';
+
+.addNewGroup {
+  &__header {
+    text-align: center;
+    font-size: 1.4rem;
+  }
+
+  &__msg {
+    color: $red;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  &__form {
+    margin: auto;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1rem;
+    align-self: center;
+    font-size: 1.4rem;
+  }
+}

@@ -22,6 +22,7 @@ const LeftMenu: React.FC<{title:string}> = ({title}) => {
         <div className="leftMenu__menuBox__container">
           <NavLink to="/dashboard" className="leftMenu__menuBox__container__menuItem">Dashboard</NavLink>
           <NavLink to="/analysis" className="leftMenu__menuBox__container__menuItem">Analysis</NavLink>
+          <NavLink to="/clinics" className="leftMenu__menuBox__container__menuItem">Clinics</NavLink>
         </div>
         <div className="leftMenu__menuBox__container">
           <NavLink to="/profile" className="leftMenu__menuBox__container__menuItem">Profile</NavLink>

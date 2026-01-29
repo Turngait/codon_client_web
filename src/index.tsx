@@ -7,7 +7,8 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import App from './App';
 import { store } from './store/store'
 import Dashboard from './pages/dashboard';
-import AnalysisPage from './pages/analysis';
+import AnalysisPage from './pages/health/analysis';
+import ClinicsPage from './pages/health/clinics';
 import Profile from './pages/profile';
 import Settings from './pages/settings';
 import './i18n';
@@ -26,6 +27,7 @@ root.render(
           <Route path="/" element={<App />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/analysis" element={<AnalysisPage />} />
+          <Route path="/clinics" element={<ClinicsPage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
