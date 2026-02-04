@@ -27,12 +27,23 @@ const EditAnalysesModal: React.FC<{
   const [groupId, setGroupId] = useState(editableItem.group_id);
   const [clinicId, setClinicId] = useState<number>(editableItem.clinic_id);
 
-  const getListForSelect = (groups: any) => {
+  const getListForSelect = (groups: any): {value: any; label: any}[] => {
     const list = [];
     for(const group of groups) {
       list.push({
         value: group.id || group.title,
         label: group.title,
+      });
+    }
+    return list;
+  }
+
+  const getClinicsForSelect = (clinics: IClinic[]): {value: any; label: any}[] => {
+    const list = [];
+    for(const clinic of clinics) {
+      list.push({
+        value: clinic.id || clinic.main.title,
+        label: clinic.main.title,
       });
     }
     return list;
@@ -50,7 +61,7 @@ const EditAnalysesModal: React.FC<{
     const selectedClinic: IClinic = clinics.filter((item: IClinic) => item.id === editableItem.clinic_id)[0];
     return {
       value: editableItem.clinic_id,
-      label: selectedClinic.title,
+      label: selectedClinic.main.title,
     }
   }
 
@@ -90,7 +101,7 @@ const EditAnalysesModal: React.FC<{
           <Select
             name="clinics"
             defaultValue={getSelectedClinicForSelect()}
-            options={getListForSelect(clinics)}
+            options={getClinicsForSelect(clinics)}
             className="basic-single addNew__form__boxWithBtn__slct"
             classNamePrefix="select"
             isSearchable={true}

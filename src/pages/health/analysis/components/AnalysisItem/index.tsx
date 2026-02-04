@@ -39,7 +39,7 @@ const AnalysisItem: React.FC<{
   const showClinicName = (clinicId: number) => {
     if (clinics && clinics.length) {
       const clinic = clinics.filter((analysis: IAnalyses) => analysis.id === clinicId);
-      return clinic && clinic.length ? clinic[0].title : "Not mentioned";
+      return clinic && clinic.length ? clinic[0].main.title : "Not mentioned";
     } else {
       return "Not mentioned";
     }

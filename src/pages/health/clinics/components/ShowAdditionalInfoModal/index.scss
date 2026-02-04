@@ -1,0 +1,64 @@
+@import '../../../../../styles/colors.scss';
+
+.showInfo {
+    &__form {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 2rem;
+    align-self: center;
+    font-size: 1.4rem;
+
+    &__selectBox {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: 2rem;
+
+      &__item {
+        cursor: pointer;
+        text-decoration: underline;
+        font-size: 1.8rem;
+        transition-duration: 0.8s;
+
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+    }
+
+    &__info {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 2rem;
+
+      &__item {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 2rem;
+        
+        &_val {
+          width: 14rem;
+        }
+      }
+
+      &__header {
+        font-weight: bold;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 2rem;
+
+        &_val {
+          width: 10rem;
+        }
+      }
+    }
+  }
+  &__msg {
+    color: $red;
+  }
+}

@@ -26,12 +26,23 @@ const AddNewAnalysisModal: React.FC<{
   const [groupId, setGroupId] = useState(groups && groups.length ? groups[0].id : 1);
   const [clinicId, setClinicId] = useState<number>(clinics && clinics.length && clinics[0].id ? clinics[0].id : 1);
 
-  const getListForSelect = (groups: any) => {
+  const getListForSelect = (groups: any): {value: any; label: any}[] => {
     const list = [];
     for(const group of groups) {
       list.push({
         value: group.id || group.title,
         label: group.title,
+      });
+    }
+    return list;
+  }
+
+  const getClinicsForSelect = (clinics: IClinic[]): {value: any; label: any}[] => {
+    const list = [];
+    for(const clinic of clinics) {
+      list.push({
+        value: clinic.id || clinic.main.title,
+        label: clinic.main.title,
       });
     }
     return list;
@@ -71,7 +82,7 @@ const AddNewAnalysisModal: React.FC<{
         <div className="addNew__form__boxWithBtn">
           <Select
             name="clinics"
-            options={getListForSelect(clinics)}
+            options={getClinicsForSelect(clinics)}
             className="basic-single addNew__form__boxWithBtn__slct"
             classNamePrefix="select"
             isSearchable={true}

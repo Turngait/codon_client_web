@@ -18,11 +18,22 @@ export interface IAnalyses {
   values: IValue[]
 }
 
+interface IClinicPhone {
+  id: number;
+  title: string;
+  clinic_id: number;
+  phone_number: string;
+  is_main: number; 
+}
 export interface IClinic {
   id?: number;
-  title: string;
-  law_info?: string;
-  main_site?: string;
-  description: string;
-  phone?: string;
+  main: {
+      title: string;
+    law_info?: string;
+    main_site?: string;
+    description: string;
+    phone?: string;
+  },
+  phones?: IClinicPhone[],
+  addresses?: any[],
 }

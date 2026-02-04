@@ -23,7 +23,7 @@ import './index.scss';
 
 function AnalysisPage() {
   const [analysis, setAnalysis] = useState<IAnalyses[]>(useSelector((state: RootState) => state.analysis.analysis));
-  const [editableAnalysis, setEditableAnalysis] = useState<IAnalyses | null>(null)
+  const [editableAnalysis, setEditableAnalysis] = useState<IAnalyses | null>(null);
   const [groups, setAnalysisGroups] = useState<any>(useSelector((state: RootState) => state.analysis.groups));
   const [clinics, setClinics] = useState<IClinic[]>(useSelector((state: RootState) => state.analysis.clinics));
   const [isAddAnalysisOpen, setIsAddAnalysisOpen] = useState(false);
@@ -31,7 +31,7 @@ function AnalysisPage() {
   const [isAddClinicOpen, setIsAddClinicOpen] = useState(false);
   const [isAddValueOpen, setIsAddValueOpen] = useState(false);
   const [idForAddBValueFunction, setIdForAddBValueFunction] = useState<number | null>(null);
-  const [msg, setMsg] = useState<string | null>(null)
+  const [msg, setMsg] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -159,7 +159,7 @@ function AnalysisPage() {
     } else {
       const data = await addClinicService(token, title, description, law_info, main_site, mainPhone);
       if (data.status === 200) {
-        setClinics([...clinics, {title, description, law_info, main_site, id: data.data.clinic_id}])
+        setClinics([...clinics, {main: {title, description, law_info, main_site}, id: data.data.clinic_id}])
         setIsAddClinicOpen(false);
       } else {
         setMsg("Something goes wrong, try again latter");
