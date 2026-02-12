@@ -11,7 +11,7 @@ import ShowAdditionalInfoModal from './components/ShowAdditionalInfoModal';
 import EditIco from '../../../assets/icons/edit.png';
 import DelIco from '../../../assets/icons/del.png';
 import { IClinic } from '../../../interfaces/analysis';
-import { addClinicService, deleteClinicService } from './services/index';
+import { addClinicService, deleteClinicService, addClinicAddressService, deleteClinicAddressService } from './services/index';
 
 import './index.scss';
 
@@ -42,7 +42,7 @@ function ClinicsPage() {
     } else {
       const data = await addClinicService(token, title, description, law_info, main_site, mainPhone);
       if (data.status === 200) {
-        setClinics([...clinics, {main: {title, description, law_info, main_site}, id: data.data.clinic_id}])
+        setClinics([...clinics, {main: {title, description, law_info, main_site}, id: data.data.clinic_id}]);
         setIsAddClinicOpen(false);
       } else {
         setMsg("Something goes wrong, try again latter");
@@ -74,11 +74,69 @@ function ClinicsPage() {
     }
   }
 
+  const addAddressHandler = async (clinic_id: number, title: string, address: string, is_main: boolean, setMsg: (msg: string) => void): Promise<number | null> => {
+    const token = localStorage.getItem("token");
+
+    if(!token) {
+      navigate('/');
+      return null;
+    } else {
+      if (!clinic_id || !title || !address || typeof is_main === "undefined") {
+         setMsg('Something goes wrong, please try again latter');
+         return null;
+      }
+      const res = await addClinicAddressService(token, clinic_id, title, address, is_main);
+      if (res.status === 200 && res.data) {
+        let oldClinics: IClinic[] = JSON.parse(JSON.stringify(clinics));
+        for (const clinic of oldClinics) {
+          if (clinic.id === clinic_id) {
+            clinic.addresses?.push({title, address, is_main, id: res.data.address_id});
+          }
+        }
+        setClinics(oldClinics);
+        return res.data?.address_id || null;
+      } else {
+        setMsg("Something goes wrong, try again latter");
+        return null;
+      }
+    }
+  }
+
+
+  const deleteAddressHandler = async (id: number, setMsg: (msg: string) => void): Promise<boolean> => {
+    const token = localStorage.getItem("token");
+
+    if(!token) {
+      navigate('/');
+      return false;
+    } else {
+      if (!id) {
+         setMsg('Something goes wrong, please try again latter');
+         return false;
+      }
+      const res = await deleteClinicAddressService(token, id);
+      if (res.status === 200) {
+        return true;
+      } else {
+        setMsg("Something goes wrong, try again latter");
+        return false;
+      }
+    }
+  }
+
+
+
   return (
     <div className="clinics">
       <title>{t('clinics.title_main')}</title>
       {isAddClinicOpen ? <AddClinicModal closeModal={setIsAddClinicOpen} addClinicHandler={addClinicHandler}/> : null}
-      {clinicForAdditionalInfo ? <ShowAdditionalInfoModal closeModal={setClinicForAdditionalInfo} clinic={clinicForAdditionalInfo} /> : null}
+      {clinicForAdditionalInfo 
+        ? <ShowAdditionalInfoModal
+            closeModal={setClinicForAdditionalInfo}
+            clinicInfo={clinicForAdditionalInfo}
+            addClinicAddress={addAddressHandler}
+            deleteAddress={deleteAddressHandler}
+          /> : null}
       <LeftMenu title='Clinics' />
       <div className='clinics__infoBox'>
         {

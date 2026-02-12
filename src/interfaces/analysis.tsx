@@ -25,6 +25,15 @@ interface IClinicPhone {
   phone_number: string;
   is_main: number; 
 }
+
+interface IClinicAddresses {
+  id: number;
+  title: string;
+  clinic_id?: number;
+  address: string;
+  is_main: boolean; 
+}
+
 export interface IClinic {
   id?: number;
   main: {
@@ -35,5 +44,5 @@ export interface IClinic {
     phone?: string;
   },
   phones?: IClinicPhone[],
-  addresses?: any[],
+  addresses?: IClinicAddresses[],
 }
