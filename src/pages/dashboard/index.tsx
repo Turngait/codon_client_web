@@ -6,10 +6,11 @@ import { editAnalysis, updateGroups, updateClinics } from '../../store/analysisS
 // import type { RootState } from '../../store/store'
 
 import LeftMenu from '../../components/LeftMenu';
-import { getAllDataService } from './services';
+import { getUserDataService } from './services';
 
 import './index.scss';
 import { useTranslation } from "react-i18next";
+import { setUserInfo } from "../../store/userSlice";
 
 
 function Dashboard() {
@@ -26,13 +27,16 @@ function Dashboard() {
     } else {
       const fetchData = async (token: string) => {
         try {
-          const res = await getAllDataService(token);
-          if (res.status && res.status === 200) {
-            if (res.data.analysis) {
-              dispatch(editAnalysis(res.data.analysis.analysis));
-              dispatch(updateGroups(res.data.analysis.groups));
-              dispatch(updateClinics(res.data.analysis.clinics));
-              setAnalysisData(res.data.analysis.analysis);
+          const {status, data} = await getUserDataService(token);
+          if (status && status === 200) {
+            if (data.homeostasis?.data) {
+              dispatch(editAnalysis(data.homeostasis.data.analysis));
+              dispatch(updateGroups(data.homeostasis.data.groups));
+              dispatch(updateClinics(data.homeostasis.data.clinics));
+              setAnalysisData(data.homeostasis.data.analysis);
+            }
+            if (data.genome?.data) {
+              dispatch(setUserInfo(data.genome.data));
             }
           }
         } catch {
@@ -49,7 +53,9 @@ function Dashboard() {
       <title>{t('dashboard.title_main')}</title>
       <LeftMenu title={"Dashboard"} />
       <div className='dashboard__infoBox'>
-        <p className='dashboard__infoBox__warnText'>{t('common.in_progress')}</p>
+        <div className='dashboard__infoBox__controlBox'>
+          <div className='dashboard__infoBox__controlBox__time'>{new Date().toLocaleDateString('en-GB', { dateStyle: 'full' })}</div>
+        </div>
       </div>
     </div>
   );

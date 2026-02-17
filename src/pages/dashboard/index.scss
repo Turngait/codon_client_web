@@ -8,10 +8,18 @@
 
   &__infoBox {
     padding: 5rem 6rem;
+    width: 100%;
 
-    &__warnText {
-      color: $black;
-      font-size: 1.6rem;
+    &__controlBox {
+      display: flex;
+      width: 100%;
+      flex-direction: row;
+      justify-content: flex-end;
+      
+      &__time {
+        color: $black;
+        font-size: 1.6rem;
+      }
     }
   }
 }
