@@ -5,20 +5,20 @@ import Button from "../../../../../components/Button";
 
 import './index.scss';
 
-const AddClinicAddressModal: React.FC<{
+const AddClinicPhoneModal: React.FC<{
   closeModal: (isClose: boolean) => void,
   clinicTitle: string,
-  addClinicAddressHandler: (title: string, address: string, isMain: boolean) => void
-}> = ({addClinicAddressHandler, clinicTitle, closeModal}) => {
+  addClinicPhoneHandler: (title: string, address: string, isMain: boolean) => void
+}> = ({addClinicPhoneHandler, clinicTitle, closeModal}) => {
   const [title, setTitle] = useState('');
-  const [address, setAddress] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [isMain, setIsMain] = useState(false);
   
   return (
-    <PopUp title={"Add new address for " + clinicTitle} closeModal={() => closeModal(false)}>
+    <PopUp title={"Add new phone number for " + clinicTitle} closeModal={() => closeModal(false)}>
       <div className="addNewClinic__form">
         <Textinput placeholder={`Title...`} onChange={(event) => setTitle(event.target.value)}/>
-        <Textinput placeholder={`Address...`} onChange={(event) => setAddress(event.target.value)}/>
+        <Textinput type="phone" placeholder={`Phone number...`} onChange={(event) => setPhoneNumber(event.target.value)}/>
         <label>
           <input type="checkbox" onChange={(event: any) => setIsMain(event.target.checked)} />
           Is main address
@@ -26,11 +26,11 @@ const AddClinicAddressModal: React.FC<{
         {/* <Textinput placeholder={`Law info...`} onChange={(event) => setIsMain(event.target.value)}/> */}
         <Button
             title={'Add'}
-            onClick={() => addClinicAddressHandler(title, address, isMain)} 
+            onClick={() => addClinicPhoneHandler(title, phoneNumber, isMain)} 
           />
       </div>
     </PopUp>
   )
 }
 
-export default AddClinicAddressModal;
+export default AddClinicPhoneModal;

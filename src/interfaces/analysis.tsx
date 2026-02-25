@@ -23,7 +23,7 @@ interface IClinicPhone {
   title: string;
   clinic_id: number;
   phone_number: string;
-  is_main: number; 
+  is_main: boolean; 
 }
 
 interface IClinicAddresses {
@@ -37,7 +37,7 @@ interface IClinicAddresses {
 export interface IClinic {
   id?: number;
   main: {
-      title: string;
+    title: string;
     law_info?: string;
     main_site?: string;
     description: string;
