@@ -46,3 +46,9 @@ export interface IClinic {
   phones?: IClinicPhone[],
   addresses?: IClinicAddresses[],
 }
+
+export interface IAnalysisGroup {
+  id: number;
+  title: string;
+  description: string
+}

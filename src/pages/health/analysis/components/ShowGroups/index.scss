@@ -1,0 +1,32 @@
+.showGroups {
+    &__infoBox {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1rem;
+    align-self: center;
+    font-size: 1.4rem;
+      &__header {
+        font-weight: bold;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 2rem;
+
+        &__val {
+          width: 14rem;
+        }
+      }
+      &__item {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 2rem;
+        
+        &__val {
+          width: 14rem;
+        }
+      }
+    }
+   }

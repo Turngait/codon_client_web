@@ -4,7 +4,7 @@ import Select, { SingleValue } from 'react-select';
 import PopUp from '../../../../../components/PopUp';
 import Textinput from '../../../../../components/TextInput';
 import Button from '../../../../../components/Button';
-import { IAnalyses, IClinic, IValue } from '../../../../../interfaces/analysis';
+import { IAnalyses, IAnalysisGroup, IClinic, IValue } from '../../../../../interfaces/analysis';
 
 import './index.scss';
 
@@ -15,7 +15,7 @@ const EditAnalysesModal: React.FC<{
     closeModal: (isOpen: boolean) => void,
     openAddGroupCallback: (isOpen: boolean) => void,
     openAddClinicCallback: (isOpen: boolean) => void,
-    groups: {id: number, title: string}[],
+    groups: IAnalysisGroup[],
     clinics: IClinic[],
   }> = ({ editAnalysisHandler, closeModal, groups, clinics, openAddGroupCallback, openAddClinicCallback, editableItem }) => {
   const [title, setTitle] = useState(editableItem.title);

@@ -10,13 +10,14 @@ import PlsButton from '../../../components/PlsButton';
 import AddNewAnalysisModal from './components/AddNewAnalysis';
 import AddAnalysisGroupModal from './components/AddNewAnalysisGroup';
 import AddClinicModal from './components/AddNewClinic';
+import ShowGroupModal from './components/ShowGroups';
 import AnalysisItem from './components/AnalysisItem';
 import { addAnalysisService, addAnalysisGroupService, addClinicService, addValuesService, deleteValuesService, deleteAnalysisOrValue, editAnalysisService } from './services';
 import { editAnalysis } from '../../../store/analysisSlice';
 
 import AddNewValuesModal from './components/AddNewValuesModal';
 import EditAnalysesModal from './components/EditAnalysesModal';
-import { IAnalyses, IClinic, IValue } from '../../../interfaces/analysis';
+import { IAnalyses, IClinic, IValue, IAnalysisGroup } from '../../../interfaces/analysis';
 
 import './index.scss';
 
@@ -24,12 +25,13 @@ import './index.scss';
 function AnalysisPage() {
   const [analysis, setAnalysis] = useState<IAnalyses[]>(useSelector((state: RootState) => state.analysis.analysis));
   const [editableAnalysis, setEditableAnalysis] = useState<IAnalyses | null>(null);
-  const [groups, setAnalysisGroups] = useState<any>(useSelector((state: RootState) => state.analysis.groups));
+  const [groups, setAnalysisGroups] = useState<IAnalysisGroup[]>(useSelector((state: RootState) => state.analysis.groups));
   const [clinics, setClinics] = useState<IClinic[]>(useSelector((state: RootState) => state.analysis.clinics));
   const [isAddAnalysisOpen, setIsAddAnalysisOpen] = useState(false);
   const [isAddGroupOpen, setIsAddGroupOpen] = useState(false);
   const [isAddClinicOpen, setIsAddClinicOpen] = useState(false);
   const [isAddValueOpen, setIsAddValueOpen] = useState(false);
+  const [isShowGroupOpen, setIsShowGroupOpen] = useState(false);
   const [idForAddBValueFunction, setIdForAddBValueFunction] = useState<number | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
 
@@ -151,6 +153,10 @@ function AnalysisPage() {
     }
   }
 
+  const deleteAnalysisGroupHandler = async (group_id: number) => {
+    console.log(group_id)
+  }
+
   const addClinicsHandler = async (title: string, description: string, law_info: string, main_site: string, mainPhone: string, setMsg: (msg: string | null) => void) => {
     const token = localStorage.getItem("token");
 
@@ -214,7 +220,11 @@ function AnalysisPage() {
         setTimeout(() => setMsg(null), 4000);
       }
     }
-  } 
+  }
+
+  const setShowGroupModel = (isOpen: boolean) => {
+    setIsShowGroupOpen(isOpen);
+  }
 
   const closeModal = () => {
     setIsAddAnalysisOpen(false);
@@ -242,6 +252,16 @@ function AnalysisPage() {
       {
         isAddValueOpen && idForAddBValueFunction ?
           <AddNewValuesModal closeModal={setIsAddValueOpen} analysisId={idForAddBValueFunction} addValueHandler={addValueHandler} />
+          : null
+      }
+      {
+        isShowGroupOpen ?
+          <ShowGroupModal
+            closeModal={setShowGroupModel}
+            groups={groups}
+            deleteAnalysisGroupHandler={deleteAnalysisGroupHandler}
+            setIsAddGroupOpen={setIsAddGroupOpen}
+          />
           : null
       }
       {
@@ -285,6 +305,11 @@ function AnalysisPage() {
       }
       <LeftMenu title='Analysis' />
       <div className='analysis__infoBox'>
+        <div className='analysis__infoBox__headingBox'>
+          <div className='analysis__infoBox__headingBox__controlBox'>
+            <button className='analysis__infoBox__headingBox__controlBox__showBtn' onClick={() => setShowGroupModel(true)}>Show groups</button>
+          </div>
+        </div>
         {
           msg ? <p className='analysis__infoBox__msg'>{msg}</p> : null
         }

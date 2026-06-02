@@ -4,7 +4,7 @@ import Select, { SingleValue } from 'react-select';
 import PopUp from '../../../../../components/PopUp';
 import Textinput from '../../../../../components/TextInput';
 import Button from '../../../../../components/Button';
-import { IClinic, IValue } from '../../../../../interfaces/analysis';
+import { IAnalysisGroup, IClinic, IValue } from '../../../../../interfaces/analysis';
 
 import './index.scss';
 
@@ -14,7 +14,7 @@ const AddNewAnalysisModal: React.FC<{
     closeModal: (isOpen: boolean) => void,
     openAddGroupCallback: (isOpen: boolean) => void,
     openAddClinicCallback: (isOpen: boolean) => void,
-    groups: {id: number, title: string}[],
+    groups: IAnalysisGroup[],
     clinics: IClinic[],
   }> = ({ addNewAnalysis, closeModal, groups, clinics, openAddGroupCallback, openAddClinicCallback }) => {
   const [title, setTitle] = useState('');
@@ -23,7 +23,7 @@ const AddNewAnalysisModal: React.FC<{
   const [equipment, setEquipment] = useState('');
   const [doctors, setDoctors] = useState<string>('');
   const [msg, setMsg] = useState<string | null>(null);
-  const [groupId, setGroupId] = useState(groups && groups.length ? groups[0].id : 1);
+  const [groupId, setGroupId] = useState(groups && groups.length && groups[0].id ? groups[0].id : 1);
   const [clinicId, setClinicId] = useState<number>(clinics && clinics.length && clinics[0].id ? clinics[0].id : 1);
 
   const getListForSelect = (groups: any): {value: any; label: any}[] => {
