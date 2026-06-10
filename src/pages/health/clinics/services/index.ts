@@ -127,7 +127,38 @@ export async function addClinicAddressService(token: string, clinic_id: number, 
     return {data: res.data || null, status: res.status, msg: res.msg || null};
 }
 
-
+export async function updateClinicAddressService(token: string, id: number | undefined, title: string, address: string, is_main: boolean, clinic_id: number): Promise<{status: number, data: any, msg?: string | null}> {
+  const res = await fetch(API_URL + '/clinics/address', {
+      method: "PUT",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json;charset=utf-8",
+        "token": API_KEY,
+        "user_token": token
+      },
+      mode: "cors",
+      body: JSON.stringify({
+        "title": title,
+        "address": address,
+        "is_main": is_main,
+        "clinic_id": clinic_id,
+        "id": id
+      }),
+    })
+    .then(res => {
+      return res.json()
+    })
+    .then(data => {
+      if (data && data.status) {
+        return data;
+      }
+      else {
+        return {data: data.data, status: data, msg: null}
+      }
+    });
+  
+    return {data: res.data || null, status: res.status, msg: res.msg || null};
+}
 
 export async function deleteClinicAddressService(token: string, id: number): Promise<{status: number, msg?: string | null}> {
   const res = await fetch(API_URL + '/clinics/address', {
@@ -173,6 +204,39 @@ export async function addClinicPhoneService(token: string, clinic_id: number, ti
         "title": title,
         "phone_number": phone_number,
         "is_main": isMain,
+      }),
+    })
+    .then(res => {
+      return res.json()
+    })
+    .then(data => {
+      if (data && data.status) {
+        return data;
+      }
+      else {
+        return {data: data.data, status: data, msg: null}
+      }
+    });
+  
+    return {data: res.data || null, status: res.status, msg: res.msg || null};
+}
+
+export async function updateClinicPhoneService(token: string, id: number | undefined, title: string, phone_number: string, is_main: boolean, clinic_id: number): Promise<{status: number, data: any, msg?: string | null}> {
+  const res = await fetch(API_URL + '/clinics/phone', {
+      method: "PUT",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json;charset=utf-8",
+        "token": API_KEY,
+        "user_token": token
+      },
+      mode: "cors",
+      body: JSON.stringify({
+        "title": title,
+        "phone_number": phone_number,
+        "is_main": is_main,
+        "clinic_id": clinic_id,
+        "id": id
       }),
     })
     .then(res => {

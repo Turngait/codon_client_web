@@ -8,14 +8,30 @@ import LeftMenu from '../../../components/LeftMenu';
 import PlsButton from '../../../components/PlsButton';
 import AddClinicModal from './components/AddNewClinic';
 import ShowAdditionalInfoModal from './components/ShowAdditionalInfoModal';
+import UpdateClinicModal from './components/UpdateClinicModal';
+import UpdateClinicAddressModal from './components/UpdateClinicAddressModal';
+import UpdateClinicPhoneModal from './components/UpdateClinicPhoneModal';
+
 import EditIco from '../../../assets/icons/edit.png';
 import DelIco from '../../../assets/icons/del.png';
-import { IClinic } from '../../../interfaces/analysis';
-import { addClinicService, deleteClinicService, addClinicAddressService, deleteClinicAddressService, addClinicPhoneService, deleteClinicPhoneService, updateClinicService } from './services/index';
+
+import { IClinic, IClinicAddresses, IClinicPhone } from '../../../interfaces/analysis';
+
+import { 
+  addClinicService,
+  deleteClinicService,
+  addClinicAddressService,
+  deleteClinicAddressService,
+  addClinicPhoneService,
+  updateClinicPhoneService,
+  deleteClinicPhoneService,
+  updateClinicService,
+  updateClinicAddressService
+} from './services/index';
+
+import { updateClinics } from '../../../store/analysisSlice';
 
 import './index.scss';
-import UpdateClinicModal from './components/UpdateClinicModal';
-import { updateClinics } from '../../../store/analysisSlice';
 
 
 function ClinicsPage() {
@@ -23,7 +39,11 @@ function ClinicsPage() {
   const [msg, setMsg] = useState<string | null>(null)
   const [isAddClinicOpen, setIsAddClinicOpen] = useState(false);
   const [isUpdateClinicOpen, setIsUpdateClinicOpen] = useState(false);
+  const [isUpdateClinicAddressOpen, setIsUpdateClinicAddressOpen] = useState(false);
+  const [isUpdateClinicPhoneOpen, setIsUpdateClinicPhoneOpen] = useState(false);
   const [updatableClinic, setUpdatableClinic] = useState<IClinic | null>(null);
+  const [updatableClinicAddress, setUpdatableClinicAddress] = useState<IClinicAddresses | null>(null);
+  const [updatableClinicPhone, setUpdatableClinicPhone] = useState<IClinicPhone | null>(null);
   const [clinicForAdditionalInfo, setClinicForAdditionalInfo] = useState<IClinic | null>(null)
 
   const navigate = useNavigate();
@@ -144,6 +164,99 @@ function ClinicsPage() {
     }
   }
 
+  const onUpdateClinicAddress = (address: IClinicAddresses | null) => {
+    if(!address) return;
+    setClinicForAdditionalInfo(null);
+    setUpdatableClinicAddress(address);
+    setIsUpdateClinicAddressOpen(true);
+  }
+
+  const updateClinicAddressHandler = async (id: number | undefined, title: string, address: string, is_main: boolean, clinic_id: number, setMsg: (msg: string | null) => void) => {
+    if(!id) return
+    const token = localStorage.getItem("token");
+
+    if(!token) {
+      navigate('/');
+    } else {
+      const data = await updateClinicAddressService(token, id, title, address, is_main, clinic_id);
+      if (data.status === 200) {
+        console.log(data)
+        let oldClinics: IClinic[] = JSON.parse(JSON.stringify(clinics));
+
+        for (const clinic of oldClinics) {
+          if (clinic.id === updatableClinicAddress?.clinic_id && clinic.addresses) {
+            for (const addr of clinic.addresses) {
+              if (addr.id === id) {
+                addr.address = address;
+                addr.is_main = is_main;
+                addr.title = title;
+            }
+          }
+        }
+      }
+
+        setClinics(oldClinics);
+        dispatch(updateClinics(oldClinics));
+        setIsUpdateClinicAddressOpen(false);
+      } else {
+        if(data.status === 4003) {
+          setMsg("Main clinic address is exist");
+          setTimeout(() => setMsg(null), 4000);
+        } else {
+          setMsg("Something goes wrong, try again latter");
+          setTimeout(() => setMsg(null), 4000);
+        }
+      }
+    }
+  }
+
+  const onUpdateClinicPhone = (phone: IClinicPhone | null) => {
+    if(!phone) return;
+    console.log(phone)
+    setClinicForAdditionalInfo(null);
+    setUpdatableClinicPhone(phone);
+    setIsUpdateClinicPhoneOpen(true);
+  }
+
+  const updateClinicPhoneHandler = async (id: number | undefined, title: string, phoneNum: string, is_main: boolean, clinic_id: number, setMsg: (msg: string | null) => void) => {
+    if(!id) return
+    const token = localStorage.getItem("token");
+
+    if(!token) {
+      navigate('/');
+    } else {
+      const data = await updateClinicPhoneService(token, id, title, phoneNum, is_main, clinic_id);
+      if (data.status === 200) {
+        console.log(data)
+        let oldClinics: IClinic[] = JSON.parse(JSON.stringify(clinics));
+
+        for (const clinic of oldClinics) {
+          if (clinic.id === updatableClinicPhone?.clinic_id && clinic.phones) {
+            for (const phone of clinic.phones) {
+              if (phone.id === id) {
+                phone.phone_number = phoneNum;
+                phone.is_main = is_main;
+                phone.title = title;
+            }
+          }
+        }
+      }
+
+        setClinics(oldClinics);
+        dispatch(updateClinics(oldClinics));
+        setIsUpdateClinicPhoneOpen(false);
+      } else {
+        if(data.status === 4003) {
+          setMsg("Main clinic phone is exist");
+          setTimeout(() => setMsg(null), 4000);
+        } else {
+          setMsg("Something goes wrong, try again latter");
+          setTimeout(() => setMsg(null), 4000);
+        }
+      }
+    }
+  }
+
 
   const deleteAddressHandler = async (id: number, setMsg: (msg: string) => void): Promise<boolean> => {
     const token = localStorage.getItem("token");
@@ -219,15 +332,17 @@ function ClinicsPage() {
     }
   }
 
-
-
   return (
     <div className="clinics">
       <title>{t('clinics.title_main')}</title>
+      {isUpdateClinicAddressOpen && updatableClinicAddress ? <UpdateClinicAddressModal clinicAddressInfo={updatableClinicAddress} closeModal={setIsUpdateClinicAddressOpen} updateClinicAddressHandler={updateClinicAddressHandler}/> : null}
+      {isUpdateClinicPhoneOpen && updatableClinicPhone ? <UpdateClinicPhoneModal clinicPhoneInfo={updatableClinicPhone} closeModal={setIsUpdateClinicPhoneOpen} updateClinicPhoneHandler={updateClinicPhoneHandler}/> : null}
       {isAddClinicOpen ? <AddClinicModal closeModal={setIsAddClinicOpen} addClinicHandler={addClinicHandler}/> : null}
       {isUpdateClinicOpen && updatableClinic ? <UpdateClinicModal closeModal={setIsUpdateClinicOpen} clinicInfo={updatableClinic} updateClinicHandler={updateClinicHandler} /> : null}
       {clinicForAdditionalInfo 
         ? <ShowAdditionalInfoModal
+            onUpdateClinicAddress={onUpdateClinicAddress}
+            onUpdateClinicPhone={onUpdateClinicPhone}
             closeModal={setClinicForAdditionalInfo}
             clinicInfo={clinicForAdditionalInfo}
             addClinicAddress={addAddressHandler}

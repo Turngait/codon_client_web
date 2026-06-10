@@ -18,7 +18,7 @@ export interface IAnalyses {
   values: IValue[]
 }
 
-interface IClinicPhone {
+export interface IClinicPhone {
   id: number;
   title: string;
   clinic_id: number;
@@ -26,7 +26,7 @@ interface IClinicPhone {
   is_main: boolean; 
 }
 
-interface IClinicAddresses {
+export interface IClinicAddresses {
   id: number;
   title: string;
   clinic_id?: number;

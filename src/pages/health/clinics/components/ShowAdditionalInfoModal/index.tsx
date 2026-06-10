@@ -4,7 +4,7 @@ import Button from "../../../../../components/Button";
 
 import DelIcoSmall from "../../../../../assets/icons/DeleteIco.svg";
 import EditIcoSmall from "../../../../../assets/icons/editIcoSmall.svg";
-import { IClinic } from "../../../../../interfaces/analysis";
+import { IClinic, IClinicAddresses, IClinicPhone } from "../../../../../interfaces/analysis";
 import { BtnSize } from "../../../../../types/components";
 
 import AddClinicAddressModal from "../AddAddressModal";
@@ -13,13 +13,15 @@ import './index.scss';
 import AddClinicPhoneModal from "../AddPhoneModal";
 
 const ShowAdditionalInfoModal: React.FC<{
+  onUpdateClinicAddress: (address: IClinicAddresses) => void,
+  onUpdateClinicPhone: (address: IClinicPhone) => void,
   closeModal: (isClose: null) => void,
   clinicInfo: IClinic,
   addClinicAddress: (clinic_id: number, title: string, address: string, isMain: boolean, setMsg: (msg: string) => void) => Promise<number | null>,
   addClinicPhone: (clinic_id: number, title: string, phoneNumber: string, isMain: boolean, setMsg: (msg: string) => void) => Promise<number | null>,
   deleteAddress: (id: number, setMsg: (msg: string) => void) => Promise<boolean>
   deletePhone: (id: number, setMsg: (msg: string) => void) => Promise<boolean>
-}> = ({closeModal, clinicInfo, addClinicAddress, addClinicPhone, deleteAddress, deletePhone}) => {
+}> = ({closeModal, clinicInfo, addClinicAddress, addClinicPhone, deleteAddress, deletePhone, onUpdateClinicAddress, onUpdateClinicPhone}) => {
   const [msg, setMsg] = useState<string | null>(null);
   const [isShowPhone, setIsShowPhone] = useState(false);
   const [isAddAddressOpen, setIsAddAddressOpen] = useState(false);
@@ -109,7 +111,7 @@ const ShowAdditionalInfoModal: React.FC<{
             <div className="showInfo__form__info">
               <div className="showInfo__form__info__header">
                 <p className="showInfo__form__info__header_val">Title</p>
-                <p className="showInfo__form__info__header_val">Number</p>
+                <p className="showInfo__form__info__header_val">Phone</p>
                 <p className="showInfo__form__info__header_val">Is main number</p>
               </div>
               {
@@ -119,7 +121,7 @@ const ShowAdditionalInfoModal: React.FC<{
                       <div className="showInfo__form__info__item_val">{phone.title}</div>
                       <div className="showInfo__form__info__item_val">{phone.phone_number}</div>
                       <div className="showInfo__form__info__item_val">{phone.is_main ? 'Yes' : 'No'}</div>
-                      <img src={EditIcoSmall} alt="Edit value" className='valuesBox__valuesTable__controlBox__item'/>
+                      <img src={EditIcoSmall} alt="Edit value" onClick={() => onUpdateClinicPhone(phone)} className='valuesBox__valuesTable__controlBox__item'/>
                       <img src={DelIcoSmall} alt="Delete value" onClick={() => deleteClinicPhoneHandler(phone.id)} className='valuesBox__valuesTable__controlBox__item'/>
                     </div>
                   ))
@@ -139,7 +141,7 @@ const ShowAdditionalInfoModal: React.FC<{
             <div className="showInfo__form__info">
               <div className="showInfo__form__info__header">
                 <p className="showInfo__form__info__header_val">Title</p>
-                <p className="showInfo__form__info__header_val">Number</p>
+                <p className="showInfo__form__info__header_val">Address</p>
                 <p className="showInfo__form__info__header_val">Is main number</p>
               </div>
               {
@@ -148,7 +150,7 @@ const ShowAdditionalInfoModal: React.FC<{
                     <div className="showInfo__form__info__item_val">{address.title}</div>
                     <div className="showInfo__form__info__item_val">{address.address}</div>
                     <div className="showInfo__form__info__item_val">{address.is_main ? 'Yes' : 'No'}</div>
-                    <img src={EditIcoSmall} alt="Edit value" className='valuesBox__valuesTable__controlBox__item'/>
+                    <img src={EditIcoSmall} alt="Edit value" onClick={() => onUpdateClinicAddress(address)} className='valuesBox__valuesTable__controlBox__item'/>
                     <img src={DelIcoSmall} alt="Delete value" onClick={() => deleteClinicAddressHandler(address.id)} className='valuesBox__valuesTable__controlBox__item'/>
                   </div>
               ))
