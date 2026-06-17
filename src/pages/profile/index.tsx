@@ -1,15 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import { useSelector, useDispatch } from 'react-redux'
-// import type { RootState } from './store/store'
+import { useSelector } from 'react-redux'
+import type { RootState } from '../../store/store'
 // import { editEmail } from './store/userSlice'
 import LeftMenu from '../../components/LeftMenu';
 import Textinput from '../../components/TextInput';
 import Button from '../../components/Button';
 import { BtnType } from '../../types/components';
 
-import { changePasswordService } from './services';
+import { changePasswordService, changeEmailService } from './services';
 
 import './index.scss';
 
@@ -20,6 +20,7 @@ function Profile() {
 
   const [oldPass, setOldPass] = useState('');
   const [newPass, setNewPass] = useState('');
+  const [email, setEmail] = useState(useSelector((state: RootState) => state.user.email || ''));
   const [msg, setMsg] = useState<string | null>(null);
 
   const changePass = async () => {
@@ -36,7 +37,23 @@ function Profile() {
       }
       setTimeout(() => setMsg(null), 4000);
     }
-  } 
+  }
+
+  const changeEmailHandler = async () => {
+    const token = localStorage.getItem("token");
+
+    if(!token) {
+      navigate('/');
+    } else {
+      const res = await changeEmailService(token, email);
+      if (res.status === 200) {
+        setMsg('Email was changed');
+      } else {
+        setMsg('Something goes wrong, try again latter');
+      }
+      setTimeout(() => setMsg(null), 4000);
+    }
+  }
 
   return (
     <div className="profile">
@@ -50,8 +67,8 @@ function Profile() {
           <div className='profile__infoBox__dataBox__data'>
             <div className='profile__infoBox__dataBox__data__item'>
               <p className='profile__infoBox__dataBox__data__item__title'>{t("profile.email")}</p>
-              <Textinput placeholder={t("profile.your_email")} type='email' />
-              <Button title={t("common.save")} />
+              <Textinput placeholder={t("profile.your_email")} type='email' value={email} onChange={(event) => setEmail(event.target.value)} />
+              <Button onClick={changeEmailHandler} title={t("common.save")} />
             </div>
           </div>
           <div className='profile__infoBox__dataBox__data'>

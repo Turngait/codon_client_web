@@ -19,7 +19,8 @@ const AnalysisItem: React.FC<{
   deleteAnalysis: (id: number) => void,
   deleteValue: (id: number) => void,
   openEditAnalysisHandler: (id: number) => void,
-}> = ({ item, groups, clinics, deleteAnalysis, openAddValueModal, deleteValue, openEditAnalysisHandler }) => {
+  onEditAnalysisValue: (id: number, analysisId: number) => void,
+}> = ({ item, groups, clinics, deleteAnalysis, openAddValueModal, deleteValue, openEditAnalysisHandler, onEditAnalysisValue }) => {
   // const { t } = useTranslation();
   const [isValuesOpen, setIsValuesOpen] = useState(false);
   const [values, setValues] = useState(item.values && item.values.length ? [...item.values] : []);
@@ -73,7 +74,13 @@ const AnalysisItem: React.FC<{
       isValuesOpen ?
         values && values.length ?
             (
-             <ValuesBox analysis_id={item.id} values={values} deleteValue={deleteValueHandler} openAddValueModal={openAddValueHandler} />
+             <ValuesBox 
+              analysis_id={item.id}
+              values={values}
+              deleteValue={deleteValueHandler}
+              openAddValueModal={openAddValueHandler}
+              onEditAnalysisValue={onEditAnalysisValue}  
+            />
             )
           : (
             <div className='valuesBox'>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 
@@ -18,7 +18,7 @@ function Dashboard() {
   const dispatch = useDispatch();
     const { t } = useTranslation();
   
-  const [ analysisData, setAnalysisData] = useState<any>(null);
+  // const [ analysisData, setAnalysisData] = useState<any>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -33,7 +33,7 @@ function Dashboard() {
               dispatch(editAnalysis(data.homeostasis.data.analysis));
               dispatch(updateGroups(data.homeostasis.data.groups));
               dispatch(updateClinics(data.homeostasis.data.clinics));
-              setAnalysisData(data.homeostasis.data.analysis);
+              // setAnalysisData(data.homeostasis.data.analysis);
             }
             if (data.genome?.data) {
               dispatch(setUserInfo(data.genome.data));

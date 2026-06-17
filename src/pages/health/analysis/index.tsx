@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 
 import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from '../../../store/store'
-// import { editEmail } from './store/userSlice'
 import LeftMenu from '../../../components/LeftMenu';
 import PlsButton from '../../../components/PlsButton';
 import AddNewAnalysisModal from './components/AddNewAnalysis';
@@ -12,11 +11,13 @@ import AddAnalysisGroupModal from './components/AddNewAnalysisGroup';
 import AddClinicModal from './components/AddNewClinic';
 import ShowGroupModal from './components/ShowGroups';
 import AnalysisItem from './components/AnalysisItem';
-import { addAnalysisService, addAnalysisGroupService, addClinicService, addValuesService, deleteValuesService, deleteAnalysisOrValue, editAnalysisService } from './services';
+import { addAnalysisService, addAnalysisGroupService, addClinicService, addValuesService, deleteValuesService, deleteAnalysisOrValue, editAnalysisService, editValuesService } from './services';
 import { editAnalysis } from '../../../store/analysisSlice';
 
 import AddNewValuesModal from './components/AddNewValuesModal';
 import EditAnalysesModal from './components/EditAnalysesModal';
+import EditAnalysisValueModal from './components/EditAnalysisValueModal';
+
 import { IAnalyses, IClinic, IValue, IAnalysisGroup } from '../../../interfaces/analysis';
 
 import './index.scss';
@@ -25,6 +26,7 @@ import './index.scss';
 function AnalysisPage() {
   const [analysis, setAnalysis] = useState<IAnalyses[]>(useSelector((state: RootState) => state.analysis.analysis));
   const [editableAnalysis, setEditableAnalysis] = useState<IAnalyses | null>(null);
+  const [editableAnalysisValue, setEditableAnalysisValue] = useState<IValue | null>(null);
   const [groups, setAnalysisGroups] = useState<IAnalysisGroup[]>(useSelector((state: RootState) => state.analysis.groups));
   const [clinics, setClinics] = useState<IClinic[]>(useSelector((state: RootState) => state.analysis.clinics));
   const [isAddAnalysisOpen, setIsAddAnalysisOpen] = useState(false);
@@ -124,7 +126,6 @@ function AnalysisPage() {
       navigate('/');
     } else {
       const res = await deleteAnalysisOrValue(token, id);
-      console.log(res);
       if (res.status === 200) {
         let oldAnalysis: IAnalyses[] = JSON.parse(JSON.stringify(analysis));
         oldAnalysis = oldAnalysis.filter((ana: IAnalyses) => ana.id !== id);
@@ -221,6 +222,53 @@ function AnalysisPage() {
       }
     }
   }
+  const onEditAnalysisValue = (id: number, analysisId: number) => {
+    for (const an of analysis) {
+      if (an.id === analysisId && an.values.length) {
+        for (const val of an.values) {
+          if (val.id === id) {
+            setEditableAnalysisValue(val);
+            return;
+          }
+        }
+      }
+    }
+  }
+
+  const onCloseValueEditModal = () => {
+    setEditableAnalysisValue(null);
+  }
+
+  const editValueHandler = async (value: IValue, setMsg: (msg: string | null) => void) => {
+    const token = localStorage.getItem("token");
+
+    if(!token) {
+      navigate('/');
+    } else {
+      const res = await editValuesService(token, value);
+      if (res.status === 200) {
+        let oldAnalysis: IAnalyses[] = JSON.parse(JSON.stringify(analysis));
+        for (const an of oldAnalysis) {
+          for (const val of an.values) {
+            if (val.id === value.id) {
+              val.title = value.title;
+              val.normal = value.normal;
+              val.volume = value.volume;
+              val.description = value.description;
+            }
+          }
+        }
+
+        setAnalysis(oldAnalysis);
+        dispatch(editAnalysis(oldAnalysis));
+
+        onCloseValueEditModal();
+      } else {
+        setMsg("Something goes wrong, try again latter");
+        setTimeout(() => setMsg(null), 4000);
+      }
+    }
+  }
 
   const setShowGroupModel = (isOpen: boolean) => {
     setIsShowGroupOpen(isOpen);
@@ -236,7 +284,7 @@ function AnalysisPage() {
 
   const openAddValues = (id: number) => {
     setIsAddValueOpen(true)
-    setIdForAddBValueFunction(id)
+    setIdForAddBValueFunction(id);
   }
 
   useEffect(() => {
@@ -252,6 +300,11 @@ function AnalysisPage() {
       {
         isAddValueOpen && idForAddBValueFunction ?
           <AddNewValuesModal closeModal={setIsAddValueOpen} analysisId={idForAddBValueFunction} addValueHandler={addValueHandler} />
+          : null
+      }
+      {
+        editableAnalysisValue ?
+          <EditAnalysisValueModal editValueHandler={editValueHandler} closeModal={onCloseValueEditModal} value={editableAnalysisValue} />
           : null
       }
       {
@@ -330,6 +383,7 @@ function AnalysisPage() {
                     openAddValueModal={openAddValues}
                     deleteValue={deleteValueHandler}
                     openEditAnalysisHandler={openEditAnalysisHandler}
+                    onEditAnalysisValue={onEditAnalysisValue}
                   />
                 )
               ) 

@@ -11,8 +11,9 @@ const ValuesBox: React.FC<{
   analysis_id: number
   values: IValue[],
   openAddValueModal: (id: number) => void,
-  deleteValue: (id: number) => void
-}> = ({ analysis_id, values, openAddValueModal, deleteValue }) => {
+  deleteValue: (id: number) => void,
+  onEditAnalysisValue: (id: number, analysisId: number) => void,
+}> = ({ analysis_id, values, openAddValueModal, deleteValue, onEditAnalysisValue }) => {
   // const { t } = useTranslation();
   const openAddValueHandler = (id: number) => {
     openAddValueModal(id)
@@ -39,7 +40,7 @@ const ValuesBox: React.FC<{
               <td>{val.normal}</td>
               <td>{val.description ? val.description : "No description"}</td>
               <td className='valuesBox__valuesTable__controlBox'>
-                <img src={EditIcoSmall} alt="Edit value" className='valuesBox__valuesTable__controlBox__item'/>
+                <img src={EditIcoSmall} alt="Edit value" onClick={() => onEditAnalysisValue(val.id || 0, analysis_id)} className='valuesBox__valuesTable__controlBox__item'/>
                 <img src={DelIcoSmall} alt="Delete value" onClick={() => deleteValue(val.id || 0)} className='valuesBox__valuesTable__controlBox__item'/>
               </td>
             </tr>
